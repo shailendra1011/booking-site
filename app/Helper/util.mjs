@@ -13,6 +13,7 @@ const __dirname = path.dirname(__filename);
 
 export function fileUpload(file, customFileName = null) {
     try {
+        
         const uploadDir = process.env.FILE_UPLOAD_PATH;
         customFileName = customFileName?(customFileName.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-')):null;
         if (process.env.APP_ENVIRONMENT == "live" || process.env.APP_ENVIRONMENT == "production") {
@@ -52,10 +53,13 @@ export function fileUpload(file, customFileName = null) {
                 fs.mkdirSync(uploadDir, { recursive: true });
             }
             const fileExtension = path.parse(file.name).ext;
+            
             const newFileName = customFileName ? `${customFileName}-${Date.now()}${fileExtension}` : `${Date.now()}${fileExtension}`;
-
+            
             file.mv(`${uploadDir}/${newFileName}`, (err) => {
                 if (err) {
+                    console.log(err);
+                    
                     logger.error('File upload error:', err);
                 }
             });

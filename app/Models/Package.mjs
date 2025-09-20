@@ -44,8 +44,8 @@ const PackageSchema = mongoose.Schema({
     timestamps: true
 });
 
-VehicleSchema.plugin(mongoosePaginate);
-const Vehicle = mongoose.model('vehicles', VehicleSchema);
+PackageSchema.plugin(mongoosePaginate);
+const Package = mongoose.model('packages', PackageSchema);
 
 
-export { Vehicle };
+export { Package };

@@ -22,7 +22,7 @@ adminRouter.get("/vehicle-category", VehicleController.categories);
 
 
 //Vehicle Api
-adminRouter.get("/add-edit-vehicle", VehicleController.addEditVehicle);
+adminRouter.post("/add-edit-vehicle", VehicleController.addEditVehicle);
 adminRouter.get("/vehicle-listing", VehicleController.vehicleList);
 adminRouter.get("/delete-vehicle", VehicleController.deleteVehicle);
 
@@ -30,6 +30,10 @@ adminRouter.get("/delete-vehicle", VehicleController.deleteVehicle);
 adminRouter.get("/add-edit-package", PackageController.addEditPackage);
 adminRouter.get("/package-listing", PackageController.packageList);
 adminRouter.get("/delete-package", PackageController.deletePackage);
+
+//Price Management Api
+adminRouter.get("/add-edit-price", VehicleController.addEditPrice);
+adminRouter.get("/price-listing", VehicleController.priceList);
 
 
 

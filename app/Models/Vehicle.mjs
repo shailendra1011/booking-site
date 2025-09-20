@@ -23,7 +23,22 @@ const VehicleSchema = mongoose.Schema({
         type: String,
         required: false
     },
-
+    price_per_km: {
+        type: String,
+        required: false
+    },
+    total_seat: {
+        type: String,
+        required: false
+    },
+    luggage: {
+        type: String,
+        required: false
+    },
+    fuel_type: {
+        type: String,
+        required: false
+    },
     deletedAt: {
         type: Date,
         default: null
