@@ -2,8 +2,8 @@
 import mongoose from 'mongoose';
 import repl from 'repl';
 import dotenv from 'dotenv';
-import { Article } from './app/Models/Article.mjs';
-import { Author } from './app/Models/Author.mjs';
+// import { Article } from './app/Models/Article.mjs';
+// import { Author } from './app/Models/Author.mjs';
 // Add more models as needed
 
 dotenv.config(); // load .env
@@ -17,8 +17,8 @@ mongoose.connect(MONGO_URI)
     const r = repl.start('mongo> ');
     
     // Expose models in the REPL context
-    r.context.Article = Article;
-    r.context.Author = Author;
+    // r.context.Article = Article;
+    // r.context.Author = Author;
     r.context.mongoose = mongoose;
 
     r.on('exit', async () => {
