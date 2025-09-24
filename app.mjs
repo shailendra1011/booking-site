@@ -22,6 +22,7 @@ import { Worker } from 'worker_threads';
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || 3000;
 
 // Create an Express application
 const app = express();
@@ -107,9 +108,9 @@ let server = null; // define server in outer scope
 
 // Function to start the server
 function startServer() {
-  server = app.listen(PORT, () => {
+  server = app.listen(PORT, HOST, () => {
     connectDB();
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://${HOST}:${PORT}`);
     startWorker();
   });
 }

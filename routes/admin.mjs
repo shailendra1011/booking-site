@@ -2,7 +2,6 @@ import express from 'express';
 const adminRouter = express.Router();
 
 import { CheckAuthMiddleware } from "../app/Middleware/CheckAuthMiddleware.mjs"
-import { TaxonomyController } from "../app/Controllers/Admin/TaxonomyController.mjs";
 import { AuthController } from "../app/Controllers/Admin/AuthController.mjs";
 import { VehicleController } from '../app/Controllers/Admin/VehicleController.mjs';
 import { PackageController } from '../app/Controllers/Admin/PackageController.mjs';
@@ -27,7 +26,7 @@ adminRouter.get("/vehicle-listing", VehicleController.vehicleList);
 adminRouter.get("/delete-vehicle", VehicleController.deleteVehicle);
 
 //Package Api
-adminRouter.get("/add-edit-package", PackageController.addEditPackage);
+adminRouter.post("/add-edit-package", PackageController.addEditPackage);
 adminRouter.get("/package-listing", PackageController.packageList);
 adminRouter.get("/delete-package", PackageController.deletePackage);
 
