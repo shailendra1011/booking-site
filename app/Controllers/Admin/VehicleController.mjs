@@ -13,7 +13,7 @@ export class VehicleController {
     static async addEditVehicle(req, res) {
         try {
             const valid = new Validator(req.body, {
-                vehicle_category: 'required',
+                category: 'required',
                 vehicle_name: 'required',
                 // vehicle_image: 'required',
                 inclusions: 'required',
