@@ -4,7 +4,7 @@ import {Admin} from '../app/Models/Admin.mjs';
 
 const seedAdmin = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/booking-site', {
+        await mongoose.connect('mongodb://user:2Booking%40123@65.0.232.150:27017/booking?authSource=booking', {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
