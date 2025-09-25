@@ -27,8 +27,8 @@ export class PackageController {
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
 
-            if (req.body.packageId) {
-                const filter = { _id: mongoose.Types.ObjectId(req.body.packageId) };
+            if (req.body.package_id) {
+                const filter = { _id: mongoose.Types.ObjectId(req.body.package_id) };
                 const existingpackage = await Package.findOne(filter);
                 if (!existingpackage) {
                     return customValidationFailed(res, 'Package not found', 404);
@@ -65,7 +65,16 @@ export class PackageController {
     }
     static async deletePackage(req, res) {
         try {
-            Package.deleteOne({ _id: req.body.vehicleId })
+            const { package_id } = req.body;
+
+            if (!package_id) {
+                return customValidationFailed(res, 400, 'Package Id not found', {});
+            }
+            const deletedPackage = await Package.findByIdAndDelete(package_id);
+            if (!deletedPackage) {
+                return customValidationFailed(res, 404, 'Package not found', {});
+            }
+            return success(res, "Package deleted successfully", {}, 200);
         } catch (error) {
             return failed(res, {}, error.message, 400);
         }

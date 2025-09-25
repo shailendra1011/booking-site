@@ -12,7 +12,7 @@ adminRouter.post("/login", AuthController.login);
 adminRouter.post("/forgot/password/", AuthController.forgotPassword);
 adminRouter.post("/update/password", AuthController.updatePassword);
 
-// adminRouter.use(CheckAuthMiddleware);
+adminRouter.use(CheckAuthMiddleware);
 
 adminRouter.post("/refresh/token", AuthController.refreshToken);
 
@@ -23,15 +23,15 @@ adminRouter.get("/vehicle-category", VehicleController.categories);
 //Vehicle Api
 adminRouter.post("/add-edit-vehicle", VehicleController.addEditVehicle);
 adminRouter.get("/vehicle-listing", VehicleController.vehicleList);
-adminRouter.get("/delete-vehicle", VehicleController.deleteVehicle);
+adminRouter.delete("/delete-vehicle", VehicleController.deleteVehicle);
 
 //Package Api
 adminRouter.post("/add-edit-package", PackageController.addEditPackage);
 adminRouter.get("/package-listing", PackageController.packageList);
-adminRouter.get("/delete-package", PackageController.deletePackage);
+adminRouter.delete("/delete-package", PackageController.deletePackage);
 
 //Price Management Api
-adminRouter.get("/add-edit-price", VehicleController.addEditPrice);
+adminRouter.post("/add-edit-price", VehicleController.addEditPrice);
 adminRouter.get("/price-listing", VehicleController.priceList);
 
 

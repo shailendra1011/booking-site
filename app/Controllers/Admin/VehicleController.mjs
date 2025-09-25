@@ -13,7 +13,7 @@ export class VehicleController {
     static async addEditVehicle(req, res) {
         try {
             const valid = new Validator(req.body, {
-                category: 'required',
+                vehicle_category: 'required',
                 vehicle_name: 'required',
                 // vehicle_image: 'required',
                 inclusions: 'required',
@@ -29,8 +29,8 @@ export class VehicleController {
                 console.error('File upload error:', fileError.message);
             }
 
-            if (req.body.vehicleId) {
-                const filter = { _id: mongoose.Types.ObjectId(req.body.vehicleId) };
+            if (req.body.vehicle_id) {
+                const filter = { _id: mongoose.Types.ObjectId(req.body.vehicle_id) };
                 const existingVehicle = await Vehicle.findOne(filter);
                 if (!existingVehicle) {
                     return customValidationFailed(res, 'Vehicle not found', 404);
@@ -68,11 +68,22 @@ export class VehicleController {
     }
     static async deleteVehicle(req, res) {
         try {
-            Vehicle.deleteOne({ _id: req.body.vehicleId })
+            const { vehicle_id } = req.body;
+            if (!vehicle_id) {
+                return customValidationFailed(res, 400, 'Vehicle Id not found', {});
+            }
+            const deletedVehicle = await Vehicle.findByIdAndDelete(vehicle_id);
+            if (!deletedVehicle) {
+                return customValidationFailed(res, 400, 'Vehicle Id not found', {});
+            }
+            return success(res, {}, "Vehicle deleted successfully", 200);
         } catch (error) {
-            return failed(res, {}, error.message, 400);
+            console.error("Delete Vehicle Error:", error);
+            return failed(res, {}, error.message || "Something went wrong", 500);
         }
     }
+
+
     static async categories(req, res) {
         try {
             return success(res, 'category list', category, 200);
@@ -93,8 +104,8 @@ export class VehicleController {
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
 
-            if (req.body.vehicleId) {
-                const filter = { _id: mongoose.Types.ObjectId(req.body.vehicleId) };
+            if (req.body.vehicle_id) {
+                const filter = { _id: mongoose.Types.ObjectId(req.body.vehicle_id) };
                 const existingVehicle = await Vehicle.findOne(filter);
                 if (!existingVehicle) {
                     return customValidationFailed(res, 'Vehicle not found', 404);
@@ -122,7 +133,8 @@ export class VehicleController {
             const listing = await Vehicle.paginate(query, {
                 page,
                 limit,
-                sort: { createdAt: 1 }
+                sort: { createdAt: 1 },
+                select: "vehicle_name category fuel_type price_per_km total_seat luggage"
             });
 
             return success(res, "vehicle list", listing, 200);

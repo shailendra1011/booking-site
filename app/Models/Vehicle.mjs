@@ -39,10 +39,6 @@ const VehicleSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    deletedAt: {
-        type: Date,
-        default: null
-    }
 }, {
     timestamps: true
 });

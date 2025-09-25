@@ -36,10 +36,6 @@ const PackageSchema = mongoose.Schema({
         required: false
     },
 
-    deletedAt: {
-        type: Date,
-        default: null
-    }
 }, {
     timestamps: true
 });

@@ -11,7 +11,6 @@ export class AuthController {
         try {
             const { email, password } = req.body;
             const admin = await Admin.findOne({ email });
-            console.log(admin);
 
             if (!admin) {
                 return failed(res, 'user does not exist', 400);
@@ -25,7 +24,6 @@ export class AuthController {
                     expiresIn: "500h",
                 },
                 );
-                console.log(token);
 
                 var data = {
                     "token": token,
@@ -78,7 +76,7 @@ export class AuthController {
             const decodedTimestamp = Buffer.from(req.body.timestamp, 'base64').toString();
             const timeDiff = Date.now() - decodedTimestamp;
             const minutesDiff = timeDiff / 60;
-            console.log(bcrypt.hashSync(req.body.password, 12));
+            // console.log(bcrypt.hashSync(req.body.password, 12));
             const update = await Admin.findOneAndUpdate({ email: decodedEmail }, { password: bcrypt.hashSync(req.body.password, 12) });
             return success(res, "password has been updated!");
         } catch (error) {
