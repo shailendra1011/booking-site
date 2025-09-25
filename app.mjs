@@ -175,14 +175,14 @@ function startWorker() {
     logger.error(`Worker exited with code ${code}`);
     if (code !== 0) {
       logger.info('Restarting worker after unexpected exit...');
-      startWorker();
+      // startWorker();
     }
   });
 }
 
 
-cron.schedule("* * * * *", () => {
-  if (syncWorker) {
-    syncWorker.postMessage({ "job": "syncScheduledPost" });
-  }
-});
+// cron.schedule("* * * * *", () => {
+//   if (syncWorker) {
+//     syncWorker.postMessage({ "job": "syncScheduledPost" });
+//   }
+// });
