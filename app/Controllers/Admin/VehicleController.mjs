@@ -76,7 +76,8 @@ export class VehicleController {
             if (!deletedVehicle) {
                 return customValidationFailed(res, 400, 'Vehicle Id not found', {});
             }
-            return success(res, {}, "Vehicle deleted successfully", 200);
+
+            return success(res, "Vehicle deleted successfully", {}, 200);
         } catch (error) {
             console.error("Delete Vehicle Error:", error);
             return failed(res, {}, error.message || "Something went wrong", 500);
