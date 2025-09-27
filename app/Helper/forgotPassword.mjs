@@ -5,8 +5,8 @@ export function sendMail(url) {
         host: "sandbox.smtp.mailtrap.io",
         port: 2525,
         auth: {
-            user: "652d6de7ccc683",
-            pass: "a82496a3dc31ab"
+            user: "383cd5e52a69b8",
+            pass: "336e6b7f9f9c56"
         }
     });
     const mailOptions = {
@@ -15,7 +15,7 @@ export function sendMail(url) {
         subject: 'Your email title here',
         text: 'your email body content here',
         html: `
-         <h1>Sample Heading Here</h1>
+         <h1>OTP for Reset Password:</h1>
          <p>${url}</p>
         `,
         // attachments: [

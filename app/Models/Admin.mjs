@@ -20,7 +20,8 @@ const AdminSchema = mongoose.Schema({
         type: String,
         required: true
     },
-   
+    
+
     deletedAt: {
         type: Date,
         default: null
@@ -29,7 +30,7 @@ const AdminSchema = mongoose.Schema({
     timestamps: true
 });
 
-AdminSchema.methods.hash = function(password) {
+AdminSchema.methods.hash = function (password) {
     return bcrypt.hashSync(password, 12);
 };
 AdminSchema.plugin(mongoosePaginate);

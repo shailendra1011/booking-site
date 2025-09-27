@@ -60,6 +60,7 @@ export class AuthController {
     }
     static async forgotPassword(req, res) {
         try {
+            // const otp = Math.floor(1000 + Math.random() * 9000);
             const encodedEmail = Buffer.from(req.body.email).toString('base64');
             const encodedTimestamp = Buffer.from(Date.now().toString()).toString('base64');
             const url = `${process.env.ADMIN_URL}/admin/update/password/${encodedEmail}/${encodedTimestamp}`;
