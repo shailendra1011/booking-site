@@ -62,8 +62,8 @@ export class AuthController {
         try {
             // const otp = Math.floor(1000 + Math.random() * 9000);
             const encodedEmail = Buffer.from(req.body.email).toString('base64');
-            const encodedTimestamp = Buffer.from(Date.now().toString()).toString('base64');
-            const url = `${process.env.ADMIN_URL}/admin/update/password/${encodedEmail}/${encodedTimestamp}`;
+            // const encodedTimestamp = Buffer.from(Date.now().toString()).toString('base64');
+            const url = `${process.env.ADMIN_URL}/admin/update/password/${encodedEmail}`;
             sendMail(url);
             return success(res, "password reset link send!", url);
 
@@ -74,12 +74,19 @@ export class AuthController {
     static async updatePassword(req, res) {
         try {
             const decodedEmail = Buffer.from(req.body.email, 'base64').toString();
-            const decodedTimestamp = Buffer.from(req.body.timestamp, 'base64').toString();
-            const timeDiff = Date.now() - decodedTimestamp;
-            const minutesDiff = timeDiff / 60;
-            // console.log(bcrypt.hashSync(req.body.password, 12));
-            const update = await Admin.findOneAndUpdate({ email: decodedEmail }, { password: bcrypt.hashSync(req.body.password, 12) });
-            return success(res, "password has been updated!");
+
+            const hashedPassword = await bcrypt.hash(req.body.password, 12);
+
+            const update = await Admin.findOneAndUpdate(
+                { email: decodedEmail },
+                { $set: { password: hashedPassword } }, // ✅ safer update syntax
+                { new: true } // ✅ ensures updated document is returned
+            );
+            if (update) {
+                return success(res, "password has been updated!", {});
+            } else {
+                return success(res, "failed!", 400);
+            }
         } catch (error) {
             return failed(res, error.message, 100);
         }
