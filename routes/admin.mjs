@@ -29,6 +29,7 @@ adminRouter.delete("/delete-vehicle", VehicleController.deleteVehicle);
 adminRouter.post("/add-edit-package", PackageController.addEditPackage);
 adminRouter.get("/package-listing", PackageController.packageList);
 adminRouter.delete("/delete-package", PackageController.deletePackage);
+adminRouter.post("/inactive-package", PackageController.inactivePackage);
 
 //Price Management Api
 adminRouter.post("/add-edit-price", VehicleController.addEditPrice);

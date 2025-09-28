@@ -15,7 +15,6 @@ export class VehicleController {
             const valid = new Validator(req.body, {
                 category: 'required',
                 vehicle_name: 'required',
-                // vehicle_image: 'required',
                 inclusions: 'required',
                 exclusions: 'required',
             });
@@ -28,6 +27,17 @@ export class VehicleController {
             } catch (fileError) {
                 console.error('File upload error:', fileError.message);
             }
+            console.log(req.body);
+            
+            if (typeof req.body.inclusions === 'string') {
+                req.body.inclusions = JSON.parse(req.body.inclusions);
+            }
+
+            if (typeof req.body.exclusions === 'string') {
+                req.body.exclusions = JSON.parse(req.body.exclusions);
+            }
+
+            console.log(req.body);
 
             if (req.body.vehicle_id) {
                 const filter = { _id: mongoose.Types.ObjectId(req.body.vehicle_id) };
@@ -39,6 +49,7 @@ export class VehicleController {
                 await Vehicle.findOneAndUpdate(filter, req.body);
                 return success(res, "vehicle updated successfully!");
             } else {
+
                 await Vehicle.create(req.body);
                 return success(res, "Vehicle added successfully!");
             }

@@ -15,14 +15,22 @@ const VehicleSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    inclusions: {
-        type: String,
-        required: false
-    },
-    exclusions: {
-        type: String,
-        required: false
-    },
+    inclusions: [
+        {
+            type: {
+                type: String,
+                required: true
+            }
+        }
+    ],
+    exclusions: [
+        {
+            type: {
+                type: String,
+                required: true
+            }
+        }
+    ],
     price_per_km: {
         type: String,
         required: false

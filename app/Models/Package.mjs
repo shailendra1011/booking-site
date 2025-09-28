@@ -27,15 +27,30 @@ const PackageSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    inclusions: {
+    inclusions: [
+        {
+            type: {
+                type: String,
+                required: true
+            }
+        }
+    ],
+    exclusions: [
+        {
+            type: {
+                type: String,
+                required: true
+            }
+        }
+    ],
+    price_calculation: {
         type: String,
         required: false
     },
-    exclusions: {
-        type: String,
+    status: {
+        type: Boolean,
         required: false
     },
-
 }, {
     timestamps: true
 });
