@@ -27,7 +27,6 @@ export class VehicleController {
             } catch (fileError) {
                 console.error('File upload error:', fileError.message);
             }
-            console.log(req.body);
             
             if (typeof req.body.inclusions === 'string') {
                 req.body.inclusions = JSON.parse(req.body.inclusions);
@@ -37,7 +36,6 @@ export class VehicleController {
                 req.body.exclusions = JSON.parse(req.body.exclusions);
             }
 
-            console.log(req.body);
 
             if (req.body.vehicle_id) {
                 const filter = { _id: mongoose.Types.ObjectId(req.body.vehicle_id) };
@@ -49,7 +47,10 @@ export class VehicleController {
                 await Vehicle.findOneAndUpdate(filter, req.body);
                 return success(res, "vehicle updated successfully!");
             } else {
-
+                req.body.fuel_type = null;
+                req.body.luggage = null;
+                req.body.price_per_km = null;
+                req.body.total_seat = null;
                 await Vehicle.create(req.body);
                 return success(res, "Vehicle added successfully!");
             }
@@ -78,8 +79,8 @@ export class VehicleController {
         }
     }
     static async deleteVehicle(req, res) {
-        try {
-            const { vehicle_id } = req.body;
+        try {            
+            const { vehicle_id } = req.query;
             if (!vehicle_id) {
                 return customValidationFailed(res, 400, 'Vehicle Id not found', {});
             }

@@ -108,8 +108,7 @@ export class PackageController {
     }
     static async deletePackage(req, res) {
         try {
-            const { package_id } = req.body;
-
+            const { package_id } = req.query;
             if (!package_id) {
                 return customValidationFailed(res, 400, 'Package Id not found', {});
             }
