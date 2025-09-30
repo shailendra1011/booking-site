@@ -2,6 +2,9 @@ import express from 'express';
 const apiRouter = express.Router();
 import { failed } from '../app/Helper/response.mjs';
 
+import { BookingController } from '../app/Controllers/Api/BookingController.mjs';
+
+apiRouter.get("/booking-type", BookingController.bookingType);
 
 apiRouter.use((req, res, next) => {
     return failed(res, "API endpoint not found", 404);

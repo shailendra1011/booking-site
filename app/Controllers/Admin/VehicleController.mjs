@@ -7,6 +7,7 @@ import logger from '../../Helper/logger.mjs';
 import mongoose from 'mongoose';
 import { log } from "console";
 import { type } from "os";
+import { City } from "../../Models/City.mjs";
 
 export class VehicleController {
 
@@ -27,7 +28,7 @@ export class VehicleController {
             } catch (fileError) {
                 console.error('File upload error:', fileError.message);
             }
-            
+
             if (typeof req.body.inclusions === 'string') {
                 req.body.inclusions = JSON.parse(req.body.inclusions);
             }
@@ -79,7 +80,7 @@ export class VehicleController {
         }
     }
     static async deleteVehicle(req, res) {
-        try {            
+        try {
             const { vehicle_id } = req.query;
             if (!vehicle_id) {
                 return customValidationFailed(res, 400, 'Vehicle Id not found', {});
@@ -104,6 +105,24 @@ export class VehicleController {
             return failed(res, {}, error.message, 400);
         }
     }
+
+    static async cityList(req, res) {
+        try {
+            var cities = await City.find({}, { name: 1 }).lean();
+            return success(res, 'city list', cities, 200);
+        } catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+    }
+     static async addCity(req, res) {
+        try {
+             await City.create(req.body);
+            return success(res, 'success', {}, 200);
+        } catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+    }
+   
     static async addEditPrice(req, res) {
         try {
             const valid = new Validator(req.body, {
