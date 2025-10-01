@@ -5,6 +5,7 @@ import { CheckAuthMiddleware } from "../app/Middleware/CheckAuthMiddleware.mjs"
 import { AuthController } from "../app/Controllers/Admin/AuthController.mjs";
 import { VehicleController } from '../app/Controllers/Admin/VehicleController.mjs';
 import { PackageController } from '../app/Controllers/Admin/PackageController.mjs';
+import { UserBookingController } from '../app/Controllers/Admin/UserBookingController.mjs';
 
 
 
@@ -32,6 +33,9 @@ adminRouter.post("/add-edit-package", PackageController.addEditPackage);
 adminRouter.get("/package-listing", PackageController.packageList);
 adminRouter.delete("/delete-package", PackageController.deletePackage);
 adminRouter.post("/inactive-package", PackageController.inactivePackage);
+
+//User Booking Api
+adminRouter.get("/user-booking", UserBookingController.getUsers);
 
 //Price Management Api
 adminRouter.post("/add-edit-price", VehicleController.addEditPrice);

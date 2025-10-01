@@ -5,6 +5,8 @@ import { failed } from '../app/Helper/response.mjs';
 import { BookingController } from '../app/Controllers/Api/BookingController.mjs';
 
 apiRouter.get("/booking-type", BookingController.bookingType);
+apiRouter.get("/vehicle-package-list", BookingController.vehiclePackageList);
+apiRouter.get("/user-booking", BookingController.userBooking);
 
 apiRouter.use((req, res, next) => {
     return failed(res, "API endpoint not found", 404);

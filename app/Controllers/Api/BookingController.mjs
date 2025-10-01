@@ -1,119 +1,109 @@
 import { Vehicle } from "../../Models/Vehicle.mjs";
+import { UserBooking } from "../../Models/UserBooking.mjs";
 import { Validator } from 'node-input-validator';
 import { success, failed, customValidationFailed, validationFailedRes, customFailedMessage } from "../../Helper/response.mjs";
-import { fileUpload } from "../../Helper/util.mjs";
 import { category } from "../../../config/category.mjs";
 import { bookingType } from "../../../config/bookingType.mjs";
-import logger from '../../Helper/logger.mjs';
+import { getDistance } from "geolib";
 import mongoose from 'mongoose';
-import { log } from "console";
-import { type } from "os";
+
 
 export class BookingController {
 
     static async bookingType(req, res) {
-       try {
+        try {
             return success(res, 'booking type', bookingType, 200);
         } catch (error) {
             return failed(res, {}, error.message, 400);
         }
     }
 
-    static async vehicleList(req, res) {
+    static async vehiclePackageList(req, res) {
         try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
-            const type = req.query.type;
-
-            let query = {};
-
-            const listing = await Vehicle.paginate(query, {
-                page,
-                limit,
-                sort: { createdAt: 1 }
-            });
-
-            return success(res, "vehicle list", listing, 200);
-        } catch (error) {
-            return failed(res, {}, error.message, 400);
-        }
-    }
-    static async deleteVehicle(req, res) {
-        try {
-            const { vehicle_id } = req.body;
-            if (!vehicle_id) {
-                return customValidationFailed(res, 400, 'Vehicle Id not found', {});
-            }
-            const deletedVehicle = await Vehicle.findByIdAndDelete(vehicle_id);
-            if (!deletedVehicle) {
-                return customValidationFailed(res, 400, 'Vehicle Id not found', {});
-            }
-
-            return success(res, "Vehicle deleted successfully", {}, 200);
-        } catch (error) {
-            console.error("Delete Vehicle Error:", error);
-            return failed(res, {}, error.message || "Something went wrong", 500);
-        }
-    }
-
-
-    static async categories(req, res) {
-        try {
-            return success(res, 'category list', category, 200);
-        } catch (error) {
-            return failed(res, {}, error.message, 400);
-        }
-    }
-    static async addEditPrice(req, res) {
-        try {
-            const valid = new Validator(req.body, {
-                vehicle_id: 'required',
-                price_per_km: 'required',
-                total_seat: 'required',
-                luggage: 'required',
-                fuel_type: 'required',
+            const valid = new Validator(req.query, {
+                booking_type: 'required',
+                from: 'required',
+                to: 'required',
+                pickup_address: 'required',
+                drop_address: 'required',
+                pickup_location_latitude: 'required',
+                pickup_location_longitude: 'required',
+                drop_location_latitude: 'required',
+                drop_location_longitude: 'required',
+                time: 'required',
+                return_journey: 'required'
             });
 
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
 
-            if (req.body.vehicle_id) {
-                const filter = { _id: mongoose.Types.ObjectId(req.body.vehicle_id) };
-                const existingVehicle = await Vehicle.findOne(filter);
-                if (!existingVehicle) {
-                    return customValidationFailed(res, 'Vehicle not found', 404);
-                }
+            const point1 = { latitude: req.query.pickup_location_latitude, longitude: req.query.pickup_location_longitude }; // New Delhi
+            const point2 = { latitude: req.query.drop_location_latitude, longitude: req.query.drop_location_longitude }; // Mumbai
 
-                await Vehicle.findOneAndUpdate(filter, req.body);
-                return success(res, "vehicle updated successfully!");
+            // getDistance returns meters
+            const distance = Math.round((getDistance(point1, point2)) / 1000);
+            let vehicles = [];
+            if (req.query.booking_type == 'Outstation') {
+
             } else {
-                await Vehicle.findOneAndUpdate(req.body);
-                return success(res, "Vehicle added successfully!");
+                vehicles = await Vehicle.find(
+                    { price_per_km: { $ne: null } },
+                    {
+                        _id: 1, vehicle_name: 1, category: 1, fuel_type: 1, price_per_km: 1, total_seat: 1, luggage: 1, inclusions: 1, exclusions: 1
+                    }
+                ).lean();
+                vehicles.forEach(vehicle => {
+                    vehicle.estimated_price = vehicle.price_per_km * distance;
+                });
+                vehicles.sort((a, b) => b.estimated_price - a.estimated_price);
+            }
+
+            return success(res, "vehicle list", vehicles, 200);
+        } catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+    }
+
+    static async userBooking(req, res) {
+        try {
+            const valid = new Validator(req.body, {
+                booking_type: 'required',
+                email: 'required',
+                mobile: 'required',
+                vehicle_category: 'required',
+                origin_city: 'required',
+                transfer_city: 'required',
+                pickup_address: 'required',
+                drop_address: 'required',
+                booking_date: 'required',
+                total_price: 'required',
+                isReturn: 'required'
+            });
+
+            const matched = await valid.check();
+            if (!matched) return validationFailedRes(res, valid);
+
+            const bookingData = {
+                ...req.body,
+                bookingId: BookingController.generateBookingId()
+            };
+
+            let data = await UserBooking.create(bookingData);
+            if (data) {
+                return success(res, "Booking successful!", data);
             }
         } catch (error) {
             return failed(res, {}, error.message, 400);
         }
     }
-
-    static async priceList(req, res) {
-        try {
-            const page = parseInt(req.query.page) || 1;
-            const limit = parseInt(req.query.limit) || 10;
-            const type = req.query.type;
-
-            let query = {};
-
-            const listing = await Vehicle.paginate(query, {
-                page,
-                limit,
-                sort: { createdAt: 1 },
-                select: "vehicle_name category fuel_type price_per_km total_seat luggage"
-            });
-
-            return success(res, "vehicle list", listing, 200);
-        } catch (error) {
-            return failed(res, {}, error.message, 400);
+    static generateBookingId(length = 10) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let bookingId = '';
+        for (let i = 0; i < length; i++) {
+            bookingId += chars.charAt(Math.floor(Math.random() * chars.length));
         }
+        return bookingId;
     }
+
 
 }
