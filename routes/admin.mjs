@@ -13,6 +13,9 @@ adminRouter.post("/login", AuthController.login);
 adminRouter.post("/forgot/password/", AuthController.forgotPassword);
 adminRouter.post("/update/password", AuthController.updatePassword);
 
+adminRouter.get("/city-list", VehicleController.cityList);
+
+
 adminRouter.use(CheckAuthMiddleware);
 
 adminRouter.post("/refresh/token", AuthController.refreshToken);
@@ -26,7 +29,6 @@ adminRouter.post("/add-edit-vehicle", VehicleController.addEditVehicle);
 adminRouter.post("/add-city", VehicleController.addCity);
 adminRouter.get("/vehicle-listing", VehicleController.vehicleList);
 adminRouter.delete("/delete-vehicle", VehicleController.deleteVehicle);
-adminRouter.get("/city-list", VehicleController.cityList);
 
 //Package Api
 adminRouter.post("/add-edit-package", PackageController.addEditPackage);
