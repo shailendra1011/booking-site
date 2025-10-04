@@ -39,7 +39,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Set up CORS options
 const corsOptions = {
-  origin: [process.env.FRONTEND_URL, process.env.ADMIN_URL, 'http://localhost:5173', 'http://65.0.232.150/travel-house-web/pick-up', 'https://preprod-article-api.iexp.in', 'https://preprod-site-cms.iexp.in', 'https://preprod-site-api.iexp.in', 'https://preprod-auto.iexp.in', 'https://preprod-telecom.iexp.in', /^https?:\/\/(?:.+\.)?financialexpress\.com$/], // Replace with your Next.js app's URL
+  origin: [process.env.FRONTEND_URL, process.env.ADMIN_URL, 'http://localhost:5173', 'http://localhost:5173', 'http://65.0.232.150/travel-house-web/pick-up', 'https://preprod-article-api.iexp.in', 'https://preprod-site-cms.iexp.in', 'https://preprod-site-api.iexp.in', 'https://preprod-auto.iexp.in', 'https://preprod-telecom.iexp.in', /^https?:\/\/(?:.+\.)?financialexpress\.com$/], // Replace with your Next.js app's URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // Include cookies and headers with credentials
 };
