@@ -41,6 +41,7 @@ export class BookingController {
             const distance = Math.round((getDistance(point1, point2)) / 1000);
             let vehicles = [];
             let packages = [];
+            const base_url = process.env.BASE_URL
             if (req.query.booking_type == 'Outstation') {
                 packages = await Package.find(
                     { from: req.query.origin_city, to: req.query.transfer_city, price_calculation: { $ne: null } },
@@ -54,7 +55,9 @@ export class BookingController {
                         .exec();
 
                     value.estimated_price = value.price_calculation * distance;
-                    value.vehicle_image = getVehicle ? getVehicle.vehicle_image : null;
+                    value.vehicle_image = getVehicle && getVehicle.vehicle_image
+                        ? `${base_url}admin/${getVehicle.vehicle_image}`
+                        : null;
                     value.luggage = getVehicle ? getVehicle.luggage : null;
                     value.total_seat = getVehicle ? getVehicle.total_seat : null;
                     value.distance = distance;
@@ -71,6 +74,7 @@ export class BookingController {
                 ).lean();
                 vehicles.forEach(vehicle => {
                     vehicle.estimated_price = vehicle.price_per_km * distance;
+                    vehicle.vehicle_image = `${base_url}admin/${vehicle.vehicle_image}`;
                     vehicle.distance = distance;
                 });
                 vehicles.sort((a, b) => b.estimated_price - a.estimated_price);

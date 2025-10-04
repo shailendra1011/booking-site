@@ -73,6 +73,14 @@ export class VehicleController {
                 limit,
                 sort: { createdAt: 1 }
             });
+            const base_url = process.env.BASE_URL
+            // Append base_url to vehicle_image
+            listing.docs = listing.docs.map(vehicle => {
+                vehicle.vehicle_image = vehicle.vehicle_image
+                    ? `${base_url}admin/${vehicle.vehicle_image}`
+                    : null;
+                return vehicle;
+            });
 
             return success(res, "vehicle list", listing, 200);
         } catch (error) {
@@ -114,15 +122,15 @@ export class VehicleController {
             return failed(res, {}, error.message, 400);
         }
     }
-     static async addCity(req, res) {
+    static async addCity(req, res) {
         try {
-             await City.create(req.body);
+            await City.create(req.body);
             return success(res, 'success', {}, 200);
         } catch (error) {
             return failed(res, {}, error.message, 400);
         }
     }
-   
+
     static async addEditPrice(req, res) {
         try {
             const valid = new Validator(req.body, {
