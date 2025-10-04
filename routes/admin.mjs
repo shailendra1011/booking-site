@@ -36,6 +36,7 @@ adminRouter.post("/inactive-package", PackageController.inactivePackage);
 
 //User Booking Api
 adminRouter.get("/user-booking", UserBookingController.getUsers);
+adminRouter.get("/booking-export", UserBookingController.exportBookingDetails);
 
 //Price Management Api
 adminRouter.post("/add-edit-price", VehicleController.addEditPrice);

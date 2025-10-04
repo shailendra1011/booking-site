@@ -61,7 +61,7 @@ export class PackageController {
                 to: req.body.to,
                 pickup_location: req.body.pickup_location,
                 drop_location: req.body.drop_location,
-                Vehicle_category: req.body.vehicle_category,
+                vehicle_category: req.body.vehicle_category,
                 fuel_types: req.body.fuel_types,
                 inclusions: req.body.inclusions,
                 exclusions: req.body.exclusions,

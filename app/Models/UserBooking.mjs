@@ -24,7 +24,7 @@ const UserBookingSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    vehicleId: {
+    vehicle_package_id: {
         type: String,
         required: true
     },

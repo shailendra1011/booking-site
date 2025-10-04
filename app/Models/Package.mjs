@@ -19,7 +19,7 @@ const PackageSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    Vehicle_category: {
+    vehicle_category: {
         type: String,
         required: false
     },

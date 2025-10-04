@@ -2,11 +2,11 @@ import nodemailer from 'nodemailer';
 
 export function sendMail(url) {
     const transporter = nodemailer.createTransport({
-        host: "sandbox.smtp.mailtrap.io",
-        port: 2525,
+        host: "smtp.gmail.com",
+        port: 587,
         auth: {
-            user: "383cd5e52a69b8",
-            pass: "336e6b7f9f9c56"
+            user: "raymartin942@gmail.com",
+            pass: "bslrkkthbskxxjyn"
         }
     });
     const mailOptions = {
