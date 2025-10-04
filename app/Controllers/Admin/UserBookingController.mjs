@@ -10,18 +10,36 @@ export class UserBookingController {
 
     static async getUsers(req, res) {
         try {
+            const page = parseInt(req.query.page) || 1; // current page
+            const limit = parseInt(req.query.limit) || 10; // records per page
+            const skip = (page - 1) * limit;
 
-            let users = await UserBooking.find().lean();
+            const users = await UserBooking.find()
+                .skip(skip)
+                .limit(limit)
+                .lean();
+
             const today = moment();
             users.forEach(user => {
                 const created_date = moment(user.createdAt);
                 user.delete_booking = `${today.diff(created_date, "days")} days ago to delete these data`;
             });
-            return success(res, "users List!", users);
 
-        } catch (error) {
-            return failed(res, {}, error.message, 400);
+            const total = await UserBooking.countDocuments();
+
+            return success(res, "Users List!", {
+                users,
+                pagination: {
+                    total,
+                    page,
+                    limit,
+                    totalPages: Math.ceil(total / limit)
+                }
+            });
+        } catch (err) {
+            return res.status(500).json({ message: err.message });
         }
+
     }
 
     static async exportBookingDetails(req, res) {
