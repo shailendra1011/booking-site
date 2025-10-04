@@ -38,13 +38,22 @@ app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Set up CORS options
-const corsOptions = {
-  origin: [process.env.FRONTEND_URL, process.env.ADMIN_URL, 'http://localhost:5173', 'http://65.0.232.150/travel-house-web/pick-up','http://65.0.232.150/travel-house-admin/'], // Replace with your Next.js app's URL
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Include cookies and headers with credentials
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: [process.env.FRONTEND_URL, process.env.ADMIN_URL, 'http://localhost:5173', 'http://65.0.232.150/travel-house-web/pick-up','http://65.0.232.150/travel-house-admin/'], // Replace with your Next.js app's URL
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true, // Include cookies and headers with credentials
+// };
+// app.use(cors(corsOptions));
 
+const corsOptions = {
+  origin: (origin, callback) => {
+    callback(null, true); // Allow all origins
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 // Set up static file serving for the /public/admin directory
 app.use('/files', express.static(path.join(__dirname, 'public', 'admin')));
 app.use(express.static(path.join(__dirname, 'public')));
