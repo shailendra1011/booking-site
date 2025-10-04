@@ -6,7 +6,7 @@ import { BookingController } from '../app/Controllers/Api/BookingController.mjs'
 
 apiRouter.get("/booking-type", BookingController.bookingType);
 apiRouter.get("/vehicle-package-list", BookingController.vehiclePackageList);
-apiRouter.get("/user-booking", BookingController.userBooking);
+apiRouter.post("/user-booking", BookingController.userBooking);
 apiRouter.post("/send-otp", BookingController.sendOtp);
 apiRouter.post("/verify-otp", BookingController.verifyOtp);
 
