@@ -50,10 +50,20 @@ export class BookingController {
                     }
                 ).lean();
                 packages = packages.map(pkg => {
-                    pkg.category = pkg.vehicle_category;
-                    delete pkg.vehicle_category; // remove the old field
+                    // ✅ Handle both `vehicle_category` and `Vehicle_category`
+                    const categoryValue = pkg.vehicle_category || pkg.Vehicle_category;
+
+                    if (categoryValue) {
+                        pkg.category = categoryValue;
+                    }
+
+                    // ✅ Remove both variants if they exist
+                    delete pkg.vehicle_category;
+                    delete pkg.Vehicle_category;
+
                     return pkg;
                 });
+
                 for (const value of packages) {
                     const getVehicle = await Vehicle.findOne({ category: value.vehicle_category })
                         .sort({ price_per_km: -1 })
