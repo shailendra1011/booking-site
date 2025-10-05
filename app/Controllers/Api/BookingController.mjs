@@ -49,6 +49,11 @@ export class BookingController {
                         _id: 1, vehicle_category: 1, fuel_types: 1, inclusions: 1, exclusions: 1, price_calculation: 1
                     }
                 ).lean();
+                packages = packages.map(pkg => {
+                    pkg.category = pkg.vehicle_category;
+                    delete pkg.vehicle_category; // remove the old field
+                    return pkg;
+                });
                 for (const value of packages) {
                     const getVehicle = await Vehicle.findOne({ category: value.vehicle_category })
                         .sort({ price_per_km: -1 })
