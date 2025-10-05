@@ -68,7 +68,7 @@ export function sendMail(url, email) {
                     <tr>
                         <td style="color:#3d4852; font-size:16px; line-height:1.5em; text-align:left; padding-top:25px;">
                         Regards,<br/>
-                        <strong>Booking Site Team</strong>
+                        <strong>ITH Team</strong>
                         </td>
                     </tr>
                     

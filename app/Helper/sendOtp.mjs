@@ -38,7 +38,7 @@ export function sendOtp(email, otp) {
                                 <tr>
                                     <td style="color:#3d4852; font-size:16px; line-height:1.6em; text-align:left; padding-top:15px;">
                                         Hello,<br/><br/>
-                                        Thank you for registering with <strong>Booking Site</strong>! To complete your email verification, please use the following One-Time Password (OTP):
+                                        we have received your booking request to complete your email verification please use the following one time password :
                                     </td>
                                 </tr>
                                 <tr>
@@ -56,7 +56,7 @@ export function sendOtp(email, otp) {
                                 <tr>
                                     <td style="color:#3d4852; font-size:16px; line-height:1.6em; text-align:left; padding-top:25px;">
                                         Regards,<br/>
-                                        <strong>Booking Site Team</strong>
+                                        <strong>ITH Team</strong>
                                     </td>
                                 </tr>
                             </table>
