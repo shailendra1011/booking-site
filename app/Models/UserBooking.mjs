@@ -52,9 +52,17 @@ const UserBookingSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    within_city_booking: {
+        type: String,
+        required: false
+    },
     isReturn: {
         type: Boolean,
         required: true
+    },
+    return_date: {
+        type: Date,
+        required: false
     },
 
     deletedAt: {

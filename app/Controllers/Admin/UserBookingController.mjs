@@ -80,7 +80,9 @@ export class UserBookingController {
                 "transfer_city",
                 "booking_date",
                 "total_price",
+                "within_city_booking",
                 "isReturn",
+                "return_date",
                 "createdAt"
             ];
 
