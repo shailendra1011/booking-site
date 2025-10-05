@@ -50,14 +50,14 @@ export class BookingController {
                     }
                 ).lean();
                 packages = packages.map(pkg => {
-                    const categoryValue = pkg.vehicle_category || pkg.Vehicle_category;
+                    const categoryValue = pkg.vehicle_category;
 
                     if (categoryValue) {
                         pkg.category = categoryValue;
                     }
 
                     delete pkg.vehicle_category;
-                    delete pkg.Vehicle_category;
+                    // delete pkg.Vehicle_category;
 
                     return pkg;
                 });
