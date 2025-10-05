@@ -16,8 +16,8 @@ export class PackageController {
             const valid = new Validator(req.body, {
                 from: 'required|string',
                 to: 'required|string',
-                pickup_location: 'required|string',
-                drop_location: 'required|string',
+                // pickup_location: 'required|string',
+                // drop_location: 'required|string',
                 vehicle_category: 'required|string',
                 fuel_types: 'required|string',
                 inclusions: 'required|array',

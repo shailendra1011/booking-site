@@ -23,7 +23,7 @@ export class BookingController {
             const valid = new Validator(req.query, {
                 booking_type: 'required',
                 origin_city: 'required',
-                transfer_city: 'required',
+                // transfer_city: 'required',
                 pickup_location_latitude: 'required',
                 pickup_location_longitude: 'required',
                 drop_location_latitude: 'required',
@@ -44,7 +44,7 @@ export class BookingController {
             const base_url = process.env.BASE_URL
             if (req.query.booking_type == 'Outstation') {
                 packages = await Package.find(
-                    { from: req.query.origin_city, to: req.query.transfer_city, price_calculation: { $ne: null } },
+                    { from: req.query.origin_city, price_calculation: { $ne: null } },
                     {
                         _id: 1, vehicle_category: 1, fuel_types: 1, inclusions: 1, exclusions: 1, price_calculation: 1
                     }
@@ -96,7 +96,7 @@ export class BookingController {
                 vehicle_category: 'required',
                 vehicle_package_id: 'required',
                 origin_city: 'required',
-                transfer_city: 'required',
+                // transfer_city: 'required',
                 pickup_address: 'required',
                 drop_address: 'required',
                 booking_date: 'required',

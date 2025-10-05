@@ -4,7 +4,8 @@ import { success, failed, customValidationFailed, validationFailedRes, customFai
 import { UserBooking } from "../../Models/UserBooking.mjs";
 import moment from "moment";
 import fs from "fs";
-import { Parser } from "json2csv";
+import { Parser } from 'json2csv';
+
 
 export class UserBookingController {
 
@@ -42,20 +43,70 @@ export class UserBookingController {
 
     }
 
+
     static async exportBookingDetails(req, res) {
         try {
-            let users = await UserBooking.find().lean();
+            // ✅ Get date range from query parameters
+            const { start_date, end_date } = req.query;
 
-            const fields = ["_id", "bookingId", "email", "mobile", "createdAt"]; // choose columns
+            // Build filter condition
+            const filter = {};
+
+            if (start_date && end_date) {
+                filter.createdAt = {
+                    $gte: new Date(start_date),
+                    $lte: new Date(end_date),
+                };
+            } else if (start_date) {
+                filter.createdAt = { $gte: new Date(start_date) };
+            } else if (end_date) {
+                filter.createdAt = { $lte: new Date(end_date) };
+            }
+
+            // ✅ Fetch filtered bookings
+            const users = await UserBooking.find(filter).lean();
+
+            if (!users.length) {
+                return res.status(404).json({
+                    success: false,
+                    message: "No bookings found for the given date range",
+                });
+            }
+
+            // ✅ Fields for CSV
+            const fields = [
+                "_id",
+                "bookingId",
+                "booking_type",
+                "email",
+                "mobile",
+                "vehicle_category",
+                "origin_city",
+                "transfer_city",
+                "booking_date",
+                "total_price",
+                "isReturn",
+                "createdAt"
+            ];
+
             const json2csvParser = new Parser({ fields });
             const csv = json2csvParser.parse(users);
 
-            fs.writeFileSync("users.csv", csv);
-            console.log("✅ Data exported to users.csv");
+            // ✅ Set headers for CSV download
+            res.setHeader('Content-Type', 'text/csv');
+            res.setHeader('Content-Disposition', 'attachment; filename="booking_details.csv"');
+
+            return success(res, "success", {}, 200);
 
         } catch (error) {
-            return failed(res, {}, error.message, 400);
+            console.error("❌ Error exporting CSV:", error);
+            return res.status(400).json({
+                success: false,
+                message: error.message,
+            });
         }
     }
+
+
 
 }

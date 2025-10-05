@@ -34,7 +34,7 @@ const UserBookingSchema = mongoose.Schema({
     },
     transfer_city: {
         type: String,
-        required: true
+        required: false
     },
     pickup_address: {
         type: String,

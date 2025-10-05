@@ -14,6 +14,7 @@ adminRouter.post("/forgot/password/", AuthController.forgotPassword);
 adminRouter.post("/update/password", AuthController.updatePassword);
 
 adminRouter.get("/city-list", VehicleController.cityList);
+adminRouter.get("/booking-export", UserBookingController.exportBookingDetails);
 
 
 adminRouter.use(CheckAuthMiddleware);
@@ -38,7 +39,6 @@ adminRouter.post("/inactive-package", PackageController.inactivePackage);
 
 //User Booking Api
 adminRouter.get("/user-booking", UserBookingController.getUsers);
-adminRouter.get("/booking-export", UserBookingController.exportBookingDetails);
 
 //Price Management Api
 adminRouter.post("/add-edit-price", VehicleController.addEditPrice);
