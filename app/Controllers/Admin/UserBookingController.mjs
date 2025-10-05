@@ -46,10 +46,7 @@ export class UserBookingController {
 
     static async exportBookingDetails(req, res) {
         try {
-            // ✅ Get date range from query parameters
             const { start_date, end_date } = req.query;
-
-            // Build filter condition
             const filter = {};
 
             if (start_date && end_date) {
@@ -63,7 +60,6 @@ export class UserBookingController {
                 filter.createdAt = { $lte: new Date(end_date) };
             }
 
-            // ✅ Fetch filtered bookings
             const users = await UserBooking.find(filter).lean();
 
             if (!users.length) {
@@ -73,7 +69,6 @@ export class UserBookingController {
                 });
             }
 
-            // ✅ Fields for CSV
             const fields = [
                 "_id",
                 "bookingId",
@@ -92,11 +87,13 @@ export class UserBookingController {
             const json2csvParser = new Parser({ fields });
             const csv = json2csvParser.parse(users);
 
-            // ✅ Set headers for CSV download
-            res.setHeader('Content-Type', 'text/csv');
-            res.setHeader('Content-Disposition', 'attachment; filename="booking_details.csv"');
+            // ✅ Set headers to force browser download
+            res.setHeader("Content-Type", "text/csv");
+            res.setHeader("Content-Disposition", "attachment; filename=booking_details.csv");
+            res.setHeader("X-Success-Message", "Booking details exported successfully!");
 
-            return success(res, "success", {}, 200);
+            // ✅ Send CSV content
+            return res.status(200).send(csv);
 
         } catch (error) {
             console.error("❌ Error exporting CSV:", error);
@@ -106,6 +103,7 @@ export class UserBookingController {
             });
         }
     }
+
 
 
 
