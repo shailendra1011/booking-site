@@ -51,7 +51,7 @@ export class BookingController {
                 ).lean();
                 packages = packages.map(pkg => {
                     pkg.category = pkg.vehicle_category;
-                    // delete pkg.vehicle_category; // remove the old field
+                    delete pkg.vehicle_category; // remove the old field
                     return pkg;
                 });
                 for (const value of packages) {
