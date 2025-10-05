@@ -16,6 +16,7 @@ export class UserBookingController {
             const skip = (page - 1) * limit;
 
             const users = await UserBooking.find()
+                .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .lean();
@@ -60,8 +61,9 @@ export class UserBookingController {
                 filter.createdAt = { $lte: new Date(end_date) };
             }
 
-            const users = await UserBooking.find(filter).lean();
-
+            const users = await UserBooking.find(filter)
+                .sort({ createdAt: -1 })
+                .lean();
             if (!users.length) {
                 return res.status(404).json({
                     success: false,
