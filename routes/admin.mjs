@@ -21,15 +21,17 @@ adminRouter.use(CheckAuthMiddleware);
 
 adminRouter.post("/refresh/token", AuthController.refreshToken);
 
-//Vehicle Api
-adminRouter.get("/vehicle-category", VehicleController.categories);
 
 
 //Vehicle Api
 adminRouter.post("/add-edit-vehicle", VehicleController.addEditVehicle);
-adminRouter.post("/add-city", VehicleController.addCity);
 adminRouter.get("/vehicle-listing", VehicleController.vehicleList);
 adminRouter.delete("/delete-vehicle", VehicleController.deleteVehicle);
+adminRouter.post("/add-Edit-city", VehicleController.addEditCity);
+adminRouter.get("/vehicle-category", VehicleController.categoryList);
+adminRouter.post("/add-edit-category", VehicleController.addEditCategory);
+adminRouter.delete("/delete-city", VehicleController.deleteCity);
+adminRouter.delete("/delete-Category", VehicleController.deleteCategory);
 
 //Package Api
 adminRouter.post("/add-edit-package", PackageController.addEditPackage);

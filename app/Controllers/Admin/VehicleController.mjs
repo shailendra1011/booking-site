@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import { log } from "console";
 import { type } from "os";
 import { City } from "../../Models/City.mjs";
+import { Category } from "../../Models/Category.mjs";
 
 export class VehicleController {
 
@@ -122,12 +123,93 @@ export class VehicleController {
             return failed(res, {}, error.message, 400);
         }
     }
-    static async addCity(req, res) {
+    static async addEditCity(req, res) {
         try {
-            await City.create(req.body);
-            return success(res, 'success', {}, 200);
+            const valid = new Validator(req.body, {
+                name: 'required'
+            });
+            const matched = await valid.check();
+            if (!matched) return validationFailedRes(res, valid);
+
+            if (req.body.city_id) {
+                const filter = { _id: mongoose.Types.ObjectId(req.body.city_id) };
+                const existingCity = await City.findOne(filter);
+                if (!existingCity) {
+                    return customValidationFailed(res, 'City not found', 404);
+                }
+                await City.findOneAndUpdate(filter, req.body);
+                return success(res, "City updated successfully!");
+            } else {
+                await City.create(req.body);
+                return success(res, "City added successfully!");
+            }
         } catch (error) {
             return failed(res, {}, error.message, 400);
+        }
+    }
+    static async categoryList(req, res) {
+        try {
+            var categories = await Category.find({}, { name: 1 }).lean();
+            return success(res, 'category list', categories, 200);
+        } catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+    }
+    static async addEditCategory(req, res) {
+        try {
+            const valid = new Validator(req.body, {
+                name: 'required'
+            });
+            const matched = await valid.check();
+            if (!matched) return validationFailedRes(res, valid);
+
+            if (req.body.category_id) {
+                const filter = { _id: mongoose.Types.ObjectId(req.body.category_id) };
+                const existingCategory = await Category.findOne(filter);
+                if (!existingCategory) {
+                    return customValidationFailed(res, 'Category not found', 404);
+                }
+                await Category.findOneAndUpdate(filter, req.body);
+                return success(res, "category updated successfully!");
+            } else {
+                await Category.create(req.body);
+                return success(res, "category added successfully!");
+            }
+        } catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+    }
+    static async deleteCity(req, res) {
+        try {
+            const { city_id } = req.query;
+            if (!city_id) {
+                return customValidationFailed(res, 400, 'city Id not found', {});
+            }
+            const deletedCity = await City.findByIdAndDelete(city_id);
+            if (!deletedCity) {
+                return customValidationFailed(res, 400, 'City not found', {});
+            }
+            return success(res, "City deleted successfully", {}, 200);
+        } catch (error) {
+            console.error("Delete City Error:", error);
+            return failed(res, {}, error.message || "Something went wrong", 500);
+        }
+    }
+    static async deleteCategory(req, res) {
+        try {
+            const { category_id } = req.query;
+            if (!category_id) {
+                return customValidationFailed(res, 400, 'Category Id not found', {});
+            }
+            const deletedCategory = await Category.findByIdAndDelete(category_id);
+            if (!deletedCategory) {
+                return customValidationFailed(res, 400, 'Category not found', {});
+            }
+
+            return success(res, "Category deleted successfully", {}, 200);
+        } catch (error) {
+            console.error("Delete Category Error:", error);
+            return failed(res, {}, error.message || "Something went wrong", 500);
         }
     }
 
