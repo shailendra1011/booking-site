@@ -3,14 +3,22 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 
 const PackageSchema = mongoose.Schema({
 
-    from: {
+    package_name: {
         type: String,
         required: true
     },
-    to: {
+    from_city: {
         type: String,
         required: true
     },
+    to_city: [
+        {
+            city: {
+                type: String,
+                required: true
+            }
+        }
+    ],
     pickup_location: {
         type: String,
         required: false
@@ -19,14 +27,14 @@ const PackageSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    vehicle_category: {
+    vehicle_name: {
         type: String,
         required: false
     },
-    fuel_types: {
-        type: String,
-        required: false
-    },
+    // fuel_types: {
+    //     type: String,
+    //     required: false
+    // },
     inclusions: [
         {
             type: {
@@ -43,13 +51,29 @@ const PackageSchema = mongoose.Schema({
             }
         }
     ],
-    price_calculation: {
+    price: {
+        type: String,
+        required: true
+    },
+    gst: {
+        type: String,
+        required: true
+    },
+    from_date: {
+        type: Date,
+        required: false
+    },
+    to_date: {
+        type: Date,
+        required: false
+    },
+    additional_notes: {
         type: String,
         required: false
     },
     status: {
         type: Boolean,
-        required: false
+        required: true
     },
 }, {
     timestamps: true

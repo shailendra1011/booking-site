@@ -3,11 +3,15 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 
 const VehicleSchema = mongoose.Schema({
 
-    category: {
+    // category: {
+    //     type: String,
+    //     required: true
+    // },
+    vehicle_name: {
         type: String,
         required: true
     },
-    vehicle_name: {
+    city_name: {
         type: String,
         required: true
     },
@@ -43,10 +47,18 @@ const VehicleSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    fuel_type: {
+    gst: {
         type: String,
         required: false
     },
+    additional_notes: {
+        type: String,
+        required: false
+    },
+    // fuel_type: {
+    //     type: String,
+    //     required: false
+    // },
 }, {
     timestamps: true
 });

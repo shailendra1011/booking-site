@@ -44,45 +44,30 @@ export class BookingController {
             const base_url = process.env.BASE_URL
             if (req.query.booking_type == 'Outstation') {
                 packages = await Package.find(
-                    { from: req.query.origin_city, price_calculation: { $ne: null } },
+                    { from_city: req.query.origin_city },
                     {
-                        _id: 1, vehicle_category: 1, fuel_types: 1, inclusions: 1, exclusions: 1, price_calculation: 1
+                        _id: 1, vehicle_name: 1, inclusions: 1, exclusions: 1, price: 1, gst: 1, additional_notes: 1
                     }
                 ).lean();
-                packages = packages.map(pkg => {
-                    const categoryValue = pkg.vehicle_category;
-
-                    if (categoryValue) {
-                        pkg.category = categoryValue;
-                    }
-
-                    delete pkg.vehicle_category;
-                    // delete pkg.Vehicle_category;
-
-                    return pkg;
-                });
 
                 for (const value of packages) {
-                    const getVehicle = await Vehicle.findOne({ category: value.category })
-                        .sort({ price_per_km: -1 })
-                        .exec();
+                    const getVehicle = await Vehicle.findOne({ vehicle_name: value.vehicle_name, city_name: req.query.origin_city }).lean();
 
-                    value.estimated_price = value.price_calculation * distance;
                     value.vehicle_image = getVehicle && getVehicle.vehicle_image
                         ? `${base_url}admin/${getVehicle.vehicle_image}`
                         : null;
                     value.luggage = getVehicle ? getVehicle.luggage : null;
                     value.total_seat = getVehicle ? getVehicle.total_seat : null;
-                    value.distance = distance;
+                    value.distance = distance ? distance : null;
                 }
-                packages.sort((a, b) => b.estimated_price - a.estimated_price);
+                packages.sort((a, b) => b.price - a.price);
                 return success(res, "Package list", packages, 200);
 
             } else {
                 vehicles = await Vehicle.find(
-                    { price_per_km: { $ne: null } },
+                    { city_name: req.query.origin_city },
                     {
-                        _id: 1, vehicle_name: 1, vehicle_image: 1, category: 1, fuel_type: 1, price_per_km: 1, total_seat: 1, luggage: 1, inclusions: 1, exclusions: 1
+                        _id: 1, vehicle_name: 1, vehicle_image: 1, price_per_km: 1, total_seat: 1, luggage: 1, inclusions: 1, exclusions: 1, additional_notes: 1, gst: 1
                     }
                 ).lean();
                 vehicles.forEach(vehicle => {

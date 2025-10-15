@@ -15,10 +15,14 @@ export class VehicleController {
     static async addEditVehicle(req, res) {
         try {
             const valid = new Validator(req.body, {
-                category: 'required',
+                city_name: 'required',
                 vehicle_name: 'required',
                 inclusions: 'required',
                 exclusions: 'required',
+                luggage: 'required',
+                total_seat: 'required',
+                price_per_km: 'required',
+                gst: 'required',
             });
 
             const matched = await valid.check();
@@ -45,14 +49,11 @@ export class VehicleController {
                 if (!existingVehicle) {
                     return customValidationFailed(res, 'Vehicle not found', 404);
                 }
-
+                
                 await Vehicle.findOneAndUpdate(filter, req.body);
                 return success(res, "vehicle updated successfully!");
             } else {
-                req.body.fuel_type = null;
-                req.body.luggage = null;
-                req.body.price_per_km = null;
-                req.body.total_seat = null;
+               
                 await Vehicle.create(req.body);
                 return success(res, "Vehicle added successfully!");
             }

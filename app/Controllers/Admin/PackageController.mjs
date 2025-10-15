@@ -14,40 +14,25 @@ export class PackageController {
     static async addEditPackage(req, res) {
         try {
             const valid = new Validator(req.body, {
-                from: 'required|string',
-                to: 'required|string',
+                package_name: 'required|string',
+                from_city: 'required|string',
+                to_city: 'required|array',
                 // pickup_location: 'required|string',
                 // drop_location: 'required|string',
-                vehicle_category: 'required|string',
-                fuel_types: 'required|string',
+                vehicle_name: 'required|string',
+                // fuel_types: 'required|string',
                 inclusions: 'required|array',
                 exclusions: 'required|array',
-                status: 'boolean'
+                price: 'required',
+                gst: 'required',
+                to_date: 'required',
+                from_date: 'required',
             });
 
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
 
-            const getMaxPricePerKm = async (category) => {
-                const result = await Vehicle.aggregate([
-                    {
-                        $match: { category: category }
-                    },
-                    {
-                        $addFields: {
-                            price_per_km_num: { $toDouble: "$price_per_km" }
-                        }
-                    },
-                    {
-                        $group: {
-                            _id: "$category",
-                            maxPricePerKm: { $max: "$price_per_km_num" }
-                        }
-                    }
-                ]);
 
-                return result.length > 0 ? result[0].maxPricePerKm : null;
-            };
 
             if (typeof req.body.inclusions === 'string') {
                 req.body.inclusions = JSON.parse(req.body.inclusions);
@@ -56,17 +41,22 @@ export class PackageController {
             if (typeof req.body.exclusions === 'string') {
                 req.body.exclusions = JSON.parse(req.body.exclusions);
             }
+            if (typeof req.body.to_city === 'string') {
+                req.body.to_city = JSON.parse(req.body.to_city);
+            }
             const data = {
-                from: req.body.from,
-                to: req.body.to,
-                pickup_location: req.body.pickup_location,
-                drop_location: req.body.drop_location,
-                vehicle_category: req.body.vehicle_category,
-                fuel_types: req.body.fuel_types,
+                package_name: req.body.package_name,
+                from_city: req.body.from_city,
+                to_city: req.body.to_city,
+                vehicle_name: req.body.vehicle_name,
                 inclusions: req.body.inclusions,
                 exclusions: req.body.exclusions,
-                price_calculation: await getMaxPricePerKm(req.body.vehicle_category),
-                status: typeof req.body.status === 'number' ? !!req.body.status : req.body.status,
+                price: req.body.price,
+                gst: req.body.gst,
+                from_date: req.body.from_date,
+                to_date: req.body.to_date,
+                additional_notes: req.body.additional_notes,
+                status: 1
             };
 
             if (req.body.package_id) {
@@ -101,7 +91,7 @@ export class PackageController {
                 sort: { createdAt: 1 }
             });
 
-            
+
             return success(res, "package list", listing, 200);
         } catch (error) {
             return failed(res, {}, error.message, 400);
