@@ -56,6 +56,10 @@ const UserBookingSchema = mongoose.Schema({
         type: String,
         required: false
     },
+    gst: {
+        type: String,
+        required: false
+    },
     isReturn: {
         type: Boolean,
         required: true
