@@ -20,7 +20,7 @@ const UserBookingSchema = mongoose.Schema({
         type: String,
         required: false
     },
-    vehicle_category: {
+    vehicle_name: {
         type: String,
         required: true
     },
@@ -38,11 +38,11 @@ const UserBookingSchema = mongoose.Schema({
     },
     pickup_address: {
         type: String,
-        required: true
+        required: false
     },
     drop_address: {
         type: String,
-        required: true
+        required: false
     },
     booking_date: {
         type: Date,

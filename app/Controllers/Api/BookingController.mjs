@@ -91,7 +91,7 @@ export class BookingController {
                 booking_type: 'required',
                 email: 'required',
                 mobile: 'required',
-                vehicle_category: 'required',
+                vehicle_name: 'required',
                 vehicle_package_id: 'required',
                 origin_city: 'required',
                 // transfer_city: 'required',
