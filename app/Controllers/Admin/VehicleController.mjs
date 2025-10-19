@@ -49,11 +49,11 @@ export class VehicleController {
                 if (!existingVehicle) {
                     return customValidationFailed(res, 'Vehicle not found', 404);
                 }
-                
+
                 await Vehicle.findOneAndUpdate(filter, req.body);
                 return success(res, "vehicle updated successfully!");
             } else {
-               
+
                 await Vehicle.create(req.body);
                 return success(res, "Vehicle added successfully!");
             }
@@ -261,6 +261,14 @@ export class VehicleController {
             });
 
             return success(res, "vehicle list", listing, 200);
+        } catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+    }
+    static async allVehicles(req, res) {
+        try {
+            const vehicles = await Vehicle.find({}, { _id: 1, vehicle_name: 1 }).lean();
+            return success(res, 'vehicle list', vehicles, 200);
         } catch (error) {
             return failed(res, {}, error.message, 400);
         }

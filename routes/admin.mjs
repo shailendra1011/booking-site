@@ -26,6 +26,7 @@ adminRouter.post("/refresh/token", AuthController.refreshToken);
 //Vehicle Api
 adminRouter.post("/add-edit-vehicle", VehicleController.addEditVehicle);
 adminRouter.get("/vehicle-listing", VehicleController.vehicleList);
+adminRouter.get("/all-vehicles", VehicleController.allVehicles);
 adminRouter.delete("/delete-vehicle", VehicleController.deleteVehicle);
 adminRouter.post("/add-Edit-city", VehicleController.addEditCity);
 adminRouter.get("/vehicle-category", VehicleController.categoryList);

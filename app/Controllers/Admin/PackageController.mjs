@@ -48,6 +48,8 @@ export class PackageController {
                 package_name: req.body.package_name,
                 from_city: req.body.from_city,
                 to_city: req.body.to_city,
+                pickup_location: req.body.pickup_location,
+                drop_location: req.body.drop_location,
                 vehicle_name: req.body.vehicle_name,
                 inclusions: req.body.inclusions,
                 exclusions: req.body.exclusions,

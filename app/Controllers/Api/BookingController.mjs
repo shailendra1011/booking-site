@@ -71,7 +71,7 @@ export class BookingController {
                     }
                 ).lean();
                 vehicles.forEach(vehicle => {
-                    vehicle.estimated_price = vehicle.price_per_km * distance;
+                    vehicle.price = vehicle.price_per_km * distance;
                     vehicle.vehicle_image = `${base_url}admin/${vehicle.vehicle_image}`;
                     vehicle.distance = distance;
                 });
