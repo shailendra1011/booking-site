@@ -7,6 +7,7 @@ import { bookingType } from "../../../config/bookingType.mjs";
 import { getDistance } from "geolib";
 import { sendOtp } from "../../Helper/sendOtp.mjs"
 import { EmailOtp } from "../../Models/EmailOtp.mjs";
+import dayjs from "dayjs";
 
 export class BookingController {
 
@@ -42,11 +43,16 @@ export class BookingController {
             let vehicles = [];
             let packages = [];
             const base_url = process.env.BASE_URL
+            const today = new Date()
             if (req.query.booking_type == 'Outstation') {
                 packages = await Package.find(
-                    { from_city: req.query.origin_city },
                     {
-                        _id: 1, vehicle_name: 1, inclusions: 1, exclusions: 1, price: 1, gst: 1, additional_notes: 1
+                        from_city: req.query.origin_city,
+                        from_date: { $lte: today }, // from_date <= today
+                        to_date: { $gte: today }    // to_date >= today
+                    },
+                    {
+                        _id: 1, vehicle_name: 1, package_name: 1, inclusions: 1, exclusions: 1, price: 1, gst: 1, from_date: 1, to_date: 1, additional_notes: 1
                     }
                 ).lean();
 

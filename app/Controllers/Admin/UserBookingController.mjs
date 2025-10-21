@@ -24,7 +24,7 @@ export class UserBookingController {
             const today = moment();
             users.forEach(user => {
                 const created_date = moment(user.createdAt);
-                user.delete_booking = `${today.diff(created_date, "days")} days ago to delete these data`;
+                user.delete_booking = `${90 - today.diff(created_date, "days")} days left to delete these data`;
             });
 
             const total = await UserBooking.countDocuments();
