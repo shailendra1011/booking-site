@@ -52,7 +52,7 @@ export class BookingController {
                         to_date: { $gte: today }    // to_date >= today
                     },
                     {
-                        _id: 1, vehicle_name: 1, package_name: 1, inclusions: 1, exclusions: 1, price: 1, gst: 1, from_date: 1, to_date: 1, additional_notes: 1
+                        _id: 1, vehicle_name: 1, package_name: 1, from_city: 1, to_city: 1, inclusions: 1, exclusions: 1, price: 1, gst: 1, from_date: 1, to_date: 1, additional_notes: 1
                     }
                 ).lean();
 
