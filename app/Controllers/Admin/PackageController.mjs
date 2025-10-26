@@ -54,6 +54,7 @@ export class PackageController {
                 inclusions: req.body.inclusions,
                 exclusions: req.body.exclusions,
                 price: req.body.price,
+                total_km: req.body.total_km,
                 gst: req.body.gst,
                 from_date: req.body.from_date,
                 to_date: req.body.to_date,
