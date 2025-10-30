@@ -7,6 +7,10 @@ const PackageSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    service_type: {
+        type: String,
+        required: true
+    },
     from_city: {
         type: String,
         required: true
@@ -55,6 +59,10 @@ const PackageSchema = mongoose.Schema({
     price: {
         type: String,
         required: true
+    },
+    km_in_hours: {
+        type: String,
+        required: false
     },
     total_km: {
         type: String,

@@ -15,6 +15,7 @@ export class PackageController {
         try {
             const valid = new Validator(req.body, {
                 package_name: 'required|string',
+                service_type: 'required|string',
                 from_city: 'required|string',
                 to_city: 'required|array',
                 // pickup_location: 'required|string',
@@ -46,6 +47,7 @@ export class PackageController {
             }
             const data = {
                 package_name: req.body.package_name,
+                service_type: req.body.service_type,
                 from_city: req.body.from_city,
                 to_city: req.body.to_city,
                 pickup_location: req.body.pickup_location,
@@ -54,6 +56,7 @@ export class PackageController {
                 inclusions: req.body.inclusions,
                 exclusions: req.body.exclusions,
                 price: req.body.price,
+                km_in_hours: req.body.km_in_hours,
                 total_km: req.body.total_km,
                 gst: req.body.gst,
                 from_date: req.body.from_date,

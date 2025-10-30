@@ -6,6 +6,9 @@ import { BookingController } from '../app/Controllers/Api/BookingController.mjs'
 
 apiRouter.get("/booking-type", BookingController.bookingType);
 apiRouter.get("/vehicle-package-list", BookingController.vehiclePackageList);
+apiRouter.get("/with-in-city-package-list", BookingController.withInCityPackage);
+apiRouter.get("/km-in-hours-dropdown", BookingController.kmInHours);
+apiRouter.get("/vehicle-name-dropdown", BookingController.vehicleNames);
 apiRouter.post("/user-booking", BookingController.userBooking);
 apiRouter.post("/send-otp", BookingController.sendOtp);
 apiRouter.post("/verify-otp", BookingController.verifyOtp);

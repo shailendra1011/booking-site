@@ -47,12 +47,13 @@ export class BookingController {
             if (req.query.booking_type == 'Outstation') {
                 packages = await Package.find(
                     {
+                        service_type: req.query.booking_type,
                         from_city: req.query.origin_city,
                         from_date: { $lte: today }, // from_date <= today
                         to_date: { $gte: today }    // to_date >= today
                     },
                     {
-                        _id: 1, vehicle_name: 1, package_name: 1, from_city: 1, to_city: 1, inclusions: 1, exclusions: 1, price: 1, total_km: 1, gst: 1, from_date: 1, to_date: 1, additional_notes: 1
+                        _id: 1, vehicle_name: 1, service_type: 1, package_name: 1, from_city: 1, to_city: 1, inclusions: 1, exclusions: 1, price: 1, km_in_hours: 1, total_km: 1, gst: 1, from_date: 1, to_date: 1, additional_notes: 1
                     }
                 ).lean();
 
@@ -70,6 +71,106 @@ export class BookingController {
                 return success(res, "Package list", packages, 200);
 
             } else {
+                packages = await Package.find(
+                    {
+                        service_type: req.query.booking_type,
+                        from_city: req.query.origin_city,
+                        from_date: { $lte: today }, // from_date <= today
+                        to_date: { $gte: today }    // to_date >= today
+                    },
+                    {
+                        _id: 1, vehicle_name: 1, service_type: 1, package_name: 1, from_city: 1, to_city: 1, inclusions: 1, exclusions: 1, price: 1, km_in_hours: 1, total_km: 1, gst: 1, from_date: 1, to_date: 1, additional_notes: 1
+                    }
+                ).lean();
+                if (packages.length != 0) {
+                    for (const value of packages) {
+                        const getVehicle = await Vehicle.findOne({ vehicle_name: value.vehicle_name, city_name: req.query.origin_city }).lean();
+
+                        value.vehicle_image = getVehicle && getVehicle.vehicle_image
+                            ? `${base_url}admin/${getVehicle.vehicle_image}`
+                            : null;
+                        value.luggage = getVehicle ? getVehicle.luggage : null;
+                        value.total_seat = getVehicle ? getVehicle.total_seat : null;
+                        value.distance = distance ? distance : null;
+                    }
+                    packages.sort((a, b) => b.price - a.price);
+                    return success(res, "Package list", packages, 200);
+                } else {
+                    vehicles = await Vehicle.find(
+                        { city_name: req.query.origin_city },
+                        {
+                            _id: 1, vehicle_name: 1, vehicle_image: 1, price_per_km: 1, total_seat: 1, luggage: 1, inclusions: 1, exclusions: 1, additional_notes: 1, gst: 1
+                        }
+                    ).lean();
+                    vehicles.forEach(vehicle => {
+                        vehicle.price = vehicle.price_per_km * distance;
+                        vehicle.vehicle_image = `${base_url}admin/${vehicle.vehicle_image}`;
+                        vehicle.distance = distance;
+                    });
+                    vehicles.sort((a, b) => b.estimated_price - a.estimated_price);
+                    return success(res, "vehicle list", vehicles, 200);
+                }
+
+            }
+
+        } catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+    }
+    static async kmInHours(req, res) {
+        try {
+            let km_in_hours = await Package.find({ service_type: req.query.service_type, from_city: req.query.origin_city, km_in_hours: { $ne: null } }, { km_in_hours: 1 }).lean();
+            return success(res, 'km in hours dropdown', km_in_hours, 200);
+        } catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+    }
+    static async vehicleNames(req, res) {
+        try {
+            let vehicle_names = await Package.find({ service_type: req.query.service_type, from_city: req.query.origin_city, km_in_hours:req.query.km_in_hours }, { vehicle_name: 1 }).lean();
+            return success(res, 'vehicle name dropdown', vehicle_names, 200);
+        } catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+    }
+    static async withInCityPackage(req, res) {
+        try {
+            let packages = [];
+            let vehicles = [];
+            const base_url = process.env.BASE_URL
+            const today = new Date()
+            const point1 = { latitude: req.query.pickup_location_latitude, longitude: req.query.pickup_location_longitude }; // New Delhi
+            const point2 = { latitude: req.query.drop_location_latitude, longitude: req.query.drop_location_longitude }; // Mumbai
+            
+            // getDistance returns meters
+            const distance = Math.round((getDistance(point1, point2)) / 1000);
+            packages = await Package.find(
+                {
+                    service_type: req.query.booking_type,
+                    from_city: req.query.origin_city,
+                    km_in_hours: req.query.km_in_hours,
+                    from_date: { $lte: today }, // from_date <= today
+                    to_date: { $gte: today }    // to_date >= today
+                },
+                {
+                    _id: 1, vehicle_name: 1, service_type: 1, package_name: 1, from_city: 1, to_city: 1, inclusions: 1, exclusions: 1, price: 1, km_in_hours: 1, total_km: 1, gst: 1, from_date: 1, to_date: 1, additional_notes: 1
+                }
+            ).lean();
+            
+            if (packages.length != 0) {
+                for (const value of packages) {
+                    const getVehicle = await Vehicle.findOne({ vehicle_name: value.vehicle_name, city_name: req.query.origin_city }).lean();
+
+                    value.vehicle_image = getVehicle && getVehicle.vehicle_image
+                        ? `${base_url}admin/${getVehicle.vehicle_image}`
+                        : null;
+                    value.luggage = getVehicle ? getVehicle.luggage : null;
+                    value.total_seat = getVehicle ? getVehicle.total_seat : null;
+                    value.distance = distance ? distance : null;
+                }
+                packages.sort((a, b) => b.price - a.price);
+                return success(res, "Package list", packages, 200);
+            } else {
                 vehicles = await Vehicle.find(
                     { city_name: req.query.origin_city },
                     {
@@ -83,9 +184,7 @@ export class BookingController {
                 });
                 vehicles.sort((a, b) => b.estimated_price - a.estimated_price);
                 return success(res, "vehicle list", vehicles, 200);
-
             }
-
         } catch (error) {
             return failed(res, {}, error.message, 400);
         }
