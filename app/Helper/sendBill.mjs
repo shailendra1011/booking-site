@@ -63,7 +63,8 @@ export async function sendBill(data) {
 
         const mailOptions = {
             from: '"Hassle-Free Car ITH System" <raymartin942@gmail.com>',
-            to: "shailendrashukla1011@gmail.com", // admin email
+            to: "jatin@yopmail.com", // admin email
+            // to: "PratimSarkar@ith.co.in", // admin email
             subject: "New Booking Received – Hassle-Free Car ITH",
             text: `Hello Team,
 
