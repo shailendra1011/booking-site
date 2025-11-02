@@ -7,6 +7,7 @@ import { bookingType } from "../../../config/bookingType.mjs";
 import { getDistance } from "geolib";
 import { sendOtp } from "../../Helper/sendOtp.mjs"
 import { EmailOtp } from "../../Models/EmailOtp.mjs";
+import { sendBill } from "../../Helper/sendBill.mjs";
 import dayjs from "dayjs";
 
 export class BookingController {
@@ -206,8 +207,10 @@ export class BookingController {
                 ...req.body,
                 bookingId: BookingController.generateBookingId()
             };
-
+            console.log(bookingData);
+            
             let data = await UserBooking.create(bookingData);
+            await sendBill(bookingData);
             if (data) {
                 return success(res, "Booking successful!", data);
             }

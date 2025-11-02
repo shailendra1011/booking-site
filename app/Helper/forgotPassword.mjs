@@ -16,7 +16,7 @@ export function sendMail(url, email) {
         from: 'Booking Site <noreply@brandwagon.com>',
         to: decodedEmail,
         subject: 'Reset Password',
-        text: 'You requested a password reset. Visit the link to reset your password: http://brandwagon.com/reset-link',
+        text: 'You requested a password reset. Visit the link to reset your password:'`${url}`,
         html: `
         <!DOCTYPE html>
         <html>
