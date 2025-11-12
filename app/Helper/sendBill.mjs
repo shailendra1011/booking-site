@@ -1,20 +1,20 @@
 import nodemailer from 'nodemailer';
 
 export async function sendBill(data) {
-    try {
-       
+  try {
 
-        const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false, // use TLS
-            auth: {
-                user: "raymartin942@gmail.com",
-                pass: "bslrkkthbskxxjyn"
-            }
-        });
 
-        const htmlTemplate = `
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // use TLS
+      auth: {
+        user: "raymartin942@gmail.com",
+        pass: "bslrkkthbskxxjyn"
+      }
+    });
+
+    const htmlTemplate = `
       <!DOCTYPE html>
 <html>
   <head>
@@ -126,6 +126,14 @@ export async function sendBill(data) {
                     <td
                       style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
                     >
+                      <strong style="float: left">Name</strong>
+                      <span style="float: right">${data.name}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
+                    >
                       <strong style="float: left">Email Address</strong>
                       <span style="float: right">${data.email}</span>
                     </td>
@@ -159,36 +167,36 @@ export async function sendBill(data) {
 </html>
     `;
 
-        const mailOptions = {
-            from: '"Hassle-Free Car ITH System" <raymartin942@gmail.com>',
-            // to: "shailendrashukla1011@gmail.com", // admin email
-            // to: "jatin@yopmail.com", // admin email
-            to: "PratimSarkar@ith.co.in", // admin email
-            subject: "New Booking Received – Hassle-Free Car ITH",
-//             text: `Hello Team,
+    const mailOptions = {
+      from: '"Hassle-Free Car ITH System" <raymartin942@gmail.com>',
+      // to: "shailendrashukla1011@gmail.com", // admin email
+      // to: "jatin@yopmail.com", // admin email
+      to: "PratimSarkar@ith.co.in", // admin email
+      subject: "New Booking Received – Hassle-Free Car ITH",
+      //             text: `Hello Team,
 
-// A new booking has been received on Hassle-Free Car ITH. Here are the details:
+      // A new booking has been received on Hassle-Free Car ITH. Here are the details:
 
-// Booking ID: 7R1UYQT8Q0
-// Booking Type: Within City
-// Pickup Location: Rohini, Delhi, India
-// Drop Location: J6GF+X45, KG Marg, Atul Grove Road, Janpath, Barakhamba, New Delhi, Delhi 110001, India
-// Car: Aura
-// Customer Email: shailendrashukla1011@gmail.com
-// Customer Contact: 9354685716
-// Total Fare: ₹230.00
+      // Booking ID: 7R1UYQT8Q0
+      // Booking Type: Within City
+      // Pickup Location: Rohini, Delhi, India
+      // Drop Location: J6GF+X45, KG Marg, Atul Grove Road, Janpath, Barakhamba, New Delhi, Delhi 110001, India
+      // Car: Aura
+      // Customer Email: shailendrashukla1011@gmail.com
+      // Customer Contact: 9354685716
+      // Total Fare: ₹230.00
 
-// Please contact the customer to confirm the booking and make necessary arrangements.
+      // Please contact the customer to confirm the booking and make necessary arrangements.
 
-// Regards,
-// Hassle-Free Car ITH Booking System`,
-            html: htmlTemplate
-        };
+      // Regards,
+      // Hassle-Free Car ITH Booking System`,
+      html: htmlTemplate
+    };
 
-        const info = await transporter.sendMail(mailOptions);
-        console.log('✅ Email sent successfully:', info.response);
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Email sent successfully:', info.response);
 
-    } catch (error) {
-        console.error('❌ Error sending email:', error);
-    }
+  } catch (error) {
+    console.error('❌ Error sending email:', error);
+  }
 }

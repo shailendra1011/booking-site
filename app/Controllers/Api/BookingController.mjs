@@ -123,8 +123,36 @@ export class BookingController {
     }
     static async kmInHours(req, res) {
         try {
-            let km_in_hours = await Package.find({ service_type: req.query.service_type, from_city: req.query.origin_city, status: true, km_in_hours: { $ne: null } }, { km_in_hours: 1 }).lean();
+            let km_in_hours = await Package.aggregate([
+                {
+                    $match: {
+                        service_type: req.query.service_type,
+                        from_city: req.query.origin_city,
+                        status: true,
+                        km_in_hours: { $ne: null }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$km_in_hours",
+                        doc: { $first: "$$ROOT" } // keep the first full document per unique km_in_hours
+                    }
+                },
+                {
+                    $replaceRoot: { newRoot: "$doc" } // flatten the structure
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        km_in_hours: 1
+                    }
+                }
+            ]);
+
             return success(res, 'km in hours dropdown', km_in_hours, 200);
+
+            // let km_in_hours = await Package.find({ service_type: req.query.service_type, from_city: req.query.origin_city, status: true, km_in_hours: { $ne: null } }, { km_in_hours: 1 }).lean();
+            // return success(res, 'km in hours dropdown', km_in_hours, 200);
         } catch (error) {
             return failed(res, {}, error.message, 400);
         }
@@ -187,6 +215,7 @@ export class BookingController {
         try {
             const valid = new Validator(req.body, {
                 booking_type: 'required',
+                name: 'required',
                 email: 'required',
                 mobile: 'required',
                 vehicle_name: 'required',
@@ -207,8 +236,8 @@ export class BookingController {
                 ...req.body,
                 bookingId: BookingController.generateBookingId()
             };
-            console.log(bookingData);
-            
+            // console.log(bookingData);
+
             let data = await UserBooking.create(bookingData);
             await sendBill(bookingData);
             if (data) {
