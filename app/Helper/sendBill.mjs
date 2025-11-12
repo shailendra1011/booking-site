@@ -148,6 +148,14 @@ export async function sendBill(data) {
                   </tr>
                   <tr>
                     <td
+                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
+                    >
+                      <strong style="float: left">Booking Date</strong>
+                      <span style="float: right">${data.booking_date}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
                       style="padding: 15px 0; font-size: 18px; font-weight: 600"
                     >
                       <strong style="float: left">Total Fare</strong>
