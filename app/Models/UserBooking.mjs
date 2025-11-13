@@ -64,6 +64,10 @@ const UserBookingSchema = mongoose.Schema({
         type: String,
         required: false
     },
+    km_in_hours: {
+        type: String,
+        required: false
+    },
     isReturn: {
         type: Boolean,
         required: true
