@@ -98,31 +98,7 @@ export async function sendBill(data) {
                       <span style="float: right">${data.booking_type}</span>
                     </td>
                   </tr>
-                  <tr>
-                    <td
-                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
-                    >
-                      <strong style="float: left">Pickup Location</strong>
-                      <span style="float: right">${data.pickup_address}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
-                    >
-                      <strong style="float: left">Drop Location</strong>
-                      <span style="float: right">${data.drop_address}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
-                    >
-                      <strong style="float: left">Car</strong>
-                      <span style="float: right">${data.vehicle_name}</span>
-                    </td>
-                  </tr>
-                  <tr>
+                   <tr>
                     <td
                       style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
                     >
@@ -150,10 +126,66 @@ export async function sendBill(data) {
                     <td
                       style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
                     >
+                      <strong style="float: left">Pickup Location</strong>
+                      <span style="float: right">${data.pickup_address}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
+                    >
+                      <strong style="float: left">Drop Location</strong>
+                      <span style="float: right">${data.drop_address}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
+                    >
+                      <strong style="float: left">Origin City</strong>
+                      <span style="float: right">${data.origin_city ? data.origin_city : ''}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
+                    >
+                      <strong style="float: left">Transfer City</strong>
+                      <span style="float: right">${data.transfer_city ? data.transfer_city : ''}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
+                    >
+                      <strong style="float: left">Car</strong>
+                      <span style="float: right">${data.vehicle_name}</span>
+                    </td>
+                  </tr>
+                 
+                  <tr>
+                    <td
+                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
+                    >
                       <strong style="float: left">Booking Date</strong>
                       <span style="float: right">${data.booking_date}</span>
                     </td>
                   </tr>
+                   <tr>
+                    <td
+                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
+                    >
+                      <strong style="float: left">GST</strong>
+                      <span style="float: right">${data.gst}</span>
+                    </td>
+                  </tr>
+                  ${data.return_date ? `
+                    <tr>
+                      <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
+                        <strong style="float: left">Return Date</strong>
+                        <span style="float: right">${data.return_date ? data.return_date : ''}</span>
+                      </td>
+                    </tr>` : ``}
                   <tr>
                     <td
                       style="padding: 15px 0; font-size: 18px; font-weight: 600"
