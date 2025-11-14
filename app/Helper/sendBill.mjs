@@ -98,11 +98,11 @@ export async function sendBill(data) {
                       <span style="float: right">${data.booking_type}</span>
                     </td>
                   </tr>
-                   ${data.km_in_hours ? `
+                   ${data.within_city_booking ? `
                     <tr>
                       <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
                         <strong style="float: left">Package</strong>
-                        <span style="float: right">${data.km_in_hours ? data.km_in_hours : ''}</span>
+                        <span style="float: right">${data.within_city_booking ? data.within_city_booking : ''}</span>
                       </td>
                     </tr>` : ``}
                    <tr>
