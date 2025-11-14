@@ -153,14 +153,15 @@ export async function sendBill(data) {
                       <span style="float: right">${data.origin_city ? data.origin_city : ''}</span>
                     </td>
                   </tr>
+                  ${data.transfer_city ? `
                   <tr>
-                    <td
-                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
-                    >
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
                       <strong style="float: left">Transfer City</strong>
-                      <span style="float: right">${data.transfer_city ? data.transfer_city : ''}</span>
+                      <span style="float: right">${data.transfer_city}</span>
                     </td>
                   </tr>
+                  ` : ``}
+
                   <tr>
                     <td
                       style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
