@@ -168,14 +168,19 @@ export async function sendBill(data) {
                       <strong style="float: left">Car</strong>
                       <span style="float: right">${data.vehicle_name}</span>
                     </td>
-                  </tr>
-                 
-                  <tr>
-                    <td
-                      style="padding: 10px 0; border-bottom: 1px solid #e8e8e8"
-                    >
+                  </tr>     
+                 <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
                       <strong style="float: left">Booking Date</strong>
-                      <span style="float: right">${data.booking_date}</span>
+                      <span style="float: right; margin-left: 10px;">
+                        ${(() => {
+        const dt = new Date(data.booking_date);
+        const date = dt.toISOString().split("T")[0];
+        const time = dt.toTimeString().split(" ")[0];
+        return `${date} - ${time}`;
+      })()
+      }
+                      </span>
                     </td>
                   </tr>
                    <tr>
@@ -186,13 +191,22 @@ export async function sendBill(data) {
                       <span style="float: right">${data.gst}</span>
                     </td>
                   </tr>
-                  ${data.return_date ? `
-                    <tr>
-                      <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
-                        <strong style="float: left">Return Date</strong>
-                        <span style="float: right">${data.return_date ? data.return_date : ''}</span>
-                      </td>
-                    </tr>` : ``}
+                ${data.return_date ? `
+                  <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
+                      <strong style="float: left">Return Date</strong>
+                      <span style="float: right; margin-left: 10px;">
+                        ${(() => {
+                            const dt = new Date(data.return_date);
+                            const date = dt.toISOString().split("T")[0];
+                            const time = dt.toTimeString().split(" ")[0];
+                            return `${date} - ${time}`;
+                          })()
+                          }
+                      </span>
+                    </td>
+                  </tr>
+                  ` : ``}
                   <tr>
                     <td
                       style="padding: 15px 0; font-size: 18px; font-weight: 600"
