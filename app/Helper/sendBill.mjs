@@ -171,7 +171,7 @@ export async function sendBill(data) {
                   </tr>     
                  <tr>
                     <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
-                      <strong style="float: left">Booking Date</strong>
+                      <strong style="float: left">Scheduled Pickup</strong>
                       <span style="float: right; margin-left: 10px;">
                         ${(() => {
         const dt = new Date(data.booking_date);
