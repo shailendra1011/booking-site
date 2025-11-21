@@ -76,6 +76,18 @@ const UserBookingSchema = mongoose.Schema({
         type: Date,
         required: false
     },
+    flight_no: {
+        type: String,
+        required: false
+    },
+    travel_class: {
+        type: String,
+        required: false
+    },
+    note: {
+        type: String,
+        required: false
+    },
 
     deletedAt: {
         type: Date,

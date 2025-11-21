@@ -198,12 +198,42 @@ export async function sendBill(data) {
                       <strong style="float: left">Return Date</strong>
                       <span style="float: right; margin-left: 10px;">
                         ${(() => {
-                            const dt = new Date(data.return_date);
-                            const date = dt.toISOString().split("T")[0];
-                            const time = dt.toTimeString().split(" ")[0];
-                            return `${date} - ${time}`;
-                          })()
-                          }
+          const dt = new Date(data.return_date);
+          const date = dt.toISOString().split("T")[0];
+          const time = dt.toTimeString().split(" ")[0];
+          return `${date} - ${time}`;
+        })()
+        }
+                      </span>
+                    </td>
+                  </tr>
+                  ` : ``}
+                  ${data.flight_no ? `
+                  <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
+                      <strong style="float: left">Flight No</strong>
+                      <span style="float: right; margin-left: 10px;">
+                        ${data.flight_no}
+                      </span>
+                    </td>
+                  </tr>
+                  ` : ``}
+                  ${data.travel_class ? `
+                  <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
+                      <strong style="float: left">Travel Class</strong>
+                      <span style="float: right; margin-left: 10px;">
+                        ${data.travel_class}
+                      </span>
+                    </td>
+                  </tr>
+                  ` : ``}
+                  ${data.note ? `
+                  <tr>
+                    <td style="padding: 10px 0; border-bottom: 1px solid #e8e8e8">
+                      <strong style="float: left">Additional Note</strong>
+                      <span style="float: right; margin-left: 10px;">
+                        ${data.note}
                       </span>
                     </td>
                   </tr>
