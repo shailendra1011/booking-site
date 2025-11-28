@@ -9,6 +9,7 @@ import { sendOtp } from "../../Helper/sendOtp.mjs"
 import { EmailOtp } from "../../Models/EmailOtp.mjs";
 import { sendBill } from "../../Helper/sendBill.mjs";
 import dayjs from "dayjs";
+import { MobileOtp } from "../../Models/MobileOtp.mjs";
 
 export class BookingController {
 
@@ -285,6 +286,51 @@ export class BookingController {
                 return customFailedMessage(res, "OTP has expired", 400);
             }
             return success(res, "Email verified!", {});
+        }
+        catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+
+    }
+    static async sendMobileOtp(req, res) {
+        try {
+            const valid = new Validator(req.body, {
+                mobile: 'required'
+            });
+
+            const matched = await valid.check();
+            if (!matched) return validationFailedRes(res, valid);
+            // const otp = Math.floor(1000 + Math.random() * 9000);
+            const otp = 1234;
+            await MobileOtp.create({ mobile: req.body.mobile, otp: otp });
+            // sendOtp(req.body.mobile, otp);
+            return success(res, "Otp sent!", {});
+        }
+        catch (error) {
+            return failed(res, {}, error.message, 400);
+        }
+
+    }
+    static async verifyMobileOtp(req, res) {
+        try {
+            const valid = new Validator(req.body, {
+                mobile: 'required',
+                otp: 'required'
+            });
+
+            const matched = await valid.check();
+            if (!matched) return validationFailedRes(res, valid);
+            const mobileOtp = await MobileOtp.findOne({ mobile: req.body.mobile, otp: req.body.otp }).sort({ createdAt: -1 }).exec();
+            if (!mobileOtp) {
+                return customFailedMessage(res, "Invalid OTP", 400);
+            }
+            const currentTime = new Date();
+            const otpCreationTime = new Date(mobileOtp.createdAt);
+            const timeDifference = (currentTime - otpCreationTime) / (1000 * 60); // difference in minutes
+            if (timeDifference > 10) { // assuming OTP is valid for 10 minutes
+                return customFailedMessage(res, "OTP has expired", 400);
+            }
+            return success(res, "Mobile verified!", {});
         }
         catch (error) {
             return failed(res, {}, error.message, 400);

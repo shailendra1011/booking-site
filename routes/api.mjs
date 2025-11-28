@@ -12,6 +12,8 @@ apiRouter.get("/vehicle-name-dropdown", BookingController.vehicleNames);
 apiRouter.post("/user-booking", BookingController.userBooking);
 apiRouter.post("/send-otp", BookingController.sendOtp);
 apiRouter.post("/verify-otp", BookingController.verifyOtp);
+apiRouter.post("/send-mobile-otp", BookingController.sendMobileOtp);
+apiRouter.post("/verify-mobile-otp", BookingController.verifyMobileOtp);
 
 apiRouter.use((req, res, next) => {
     return failed(res, "API endpoint not found", 404);
