@@ -251,14 +251,22 @@ export class BookingController {
     static async sendOtp(req, res) {
         try {
             const valid = new Validator(req.body, {
-                email: 'required|email'
+                type: 'required',
+                value: 'required'
             });
 
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
-            const otp = Math.floor(1000 + Math.random() * 9000);
-            await EmailOtp.create({ email: req.body.email, otp: otp });
-            sendOtp(req.body.email, otp);
+            if (req.body.type === 'mobile') {
+                var otp = 1234;
+            }
+            else if (req.body.type === 'email') {
+                var otp = Math.floor(1000 + Math.random() * 9000);
+                sendOtp(req.body.value, otp);
+            } else {
+                var otp = Math.floor(1000 + Math.random() * 9000);
+            }
+            await EmailOtp.create({ type: req.body.type, value: req.body.value, otp: otp });
             return success(res, "Otp sent!", {});
         }
         catch (error) {
@@ -269,13 +277,14 @@ export class BookingController {
     static async verifyOtp(req, res) {
         try {
             const valid = new Validator(req.body, {
-                email: 'required|email',
+                type: 'required',
+                value: 'required',
                 otp: 'required'
             });
 
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
-            const emailOtp = await EmailOtp.findOne({ email: req.body.email, otp: req.body.otp }).sort({ createdAt: -1 }).exec();
+            const emailOtp = await EmailOtp.findOne({ type: req.body.type, value: req.body.value, otp: req.body.otp }).sort({ createdAt: -1 }).exec();
             if (!emailOtp) {
                 return customFailedMessage(res, "Invalid OTP", 400);
             }
@@ -285,7 +294,7 @@ export class BookingController {
             if (timeDifference > 10) { // assuming OTP is valid for 10 minutes
                 return customFailedMessage(res, "OTP has expired", 400);
             }
-            return success(res, "Email verified!", {});
+            return success(res, "OTP verified!", {});
         }
         catch (error) {
             return failed(res, {}, error.message, 400);

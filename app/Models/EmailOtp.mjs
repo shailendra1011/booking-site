@@ -4,7 +4,11 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 import bcrypt from 'bcrypt';
 
 const EmailOtpSchema = mongoose.Schema({
-    email: {
+    type: {
+        type: String,
+        required: true
+    },
+    value: {
         type: String,
         required: true
     },
