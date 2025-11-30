@@ -251,22 +251,20 @@ export class BookingController {
     static async sendOtp(req, res) {
         try {
             const valid = new Validator(req.body, {
-                type: 'required',
-                value: 'required'
+                email: 'required|email',
+                mobile: 'required'
             });
 
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
-            if (req.body.type === 'mobile') {
-                var otp = 1234;
+            if (req.body.mobile) {
+                var mobile_otp = 1234;
             }
-            else if (req.body.type === 'email') {
-                var otp = Math.floor(1000 + Math.random() * 9000);
-                sendOtp(req.body.value, otp);
-            } else {
-                var otp = Math.floor(1000 + Math.random() * 9000);
+            if (req.body.email) {
+                var email_otp = Math.floor(1000 + Math.random() * 9000);
+                sendOtp(req.body.email, email_otp);
             }
-            await EmailOtp.create({ type: req.body.type, value: req.body.value, otp: otp });
+            await EmailOtp.create({ email: req.body.email, mobile: req.body.mobile, email_otp: email_otp, mobile_otp: mobile_otp });
             return success(res, "Otp sent!", {});
         }
         catch (error) {
@@ -277,14 +275,15 @@ export class BookingController {
     static async verifyOtp(req, res) {
         try {
             const valid = new Validator(req.body, {
-                type: 'required',
-                value: 'required',
-                otp: 'required'
+                email: 'required|email',
+                mobile: 'required',
+                email_otp: 'required',
+                mobile_otp: 'required'
             });
 
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
-            const emailOtp = await EmailOtp.findOne({ type: req.body.type, value: req.body.value, otp: req.body.otp }).sort({ createdAt: -1 }).exec();
+            const emailOtp = await EmailOtp.findOne({ email: req.body.email, mobile: req.body.mobile, email_otp: req.body.email_otp, mobile_otp: req.body.mobile_otp }).sort({ createdAt: -1 }).exec();
             if (!emailOtp) {
                 return customFailedMessage(res, "Invalid OTP", 400);
             }
@@ -301,51 +300,7 @@ export class BookingController {
         }
 
     }
-    static async sendMobileOtp(req, res) {
-        try {
-            const valid = new Validator(req.body, {
-                mobile: 'required'
-            });
 
-            const matched = await valid.check();
-            if (!matched) return validationFailedRes(res, valid);
-            // const otp = Math.floor(1000 + Math.random() * 9000);
-            const otp = 1234;
-            await MobileOtp.create({ mobile: req.body.mobile, otp: otp });
-            // sendOtp(req.body.mobile, otp);
-            return success(res, "Otp sent!", {});
-        }
-        catch (error) {
-            return failed(res, {}, error.message, 400);
-        }
-
-    }
-    static async verifyMobileOtp(req, res) {
-        try {
-            const valid = new Validator(req.body, {
-                mobile: 'required',
-                otp: 'required'
-            });
-
-            const matched = await valid.check();
-            if (!matched) return validationFailedRes(res, valid);
-            const mobileOtp = await MobileOtp.findOne({ mobile: req.body.mobile, otp: req.body.otp }).sort({ createdAt: -1 }).exec();
-            if (!mobileOtp) {
-                return customFailedMessage(res, "Invalid OTP", 400);
-            }
-            const currentTime = new Date();
-            const otpCreationTime = new Date(mobileOtp.createdAt);
-            const timeDifference = (currentTime - otpCreationTime) / (1000 * 60); // difference in minutes
-            if (timeDifference > 10) { // assuming OTP is valid for 10 minutes
-                return customFailedMessage(res, "OTP has expired", 400);
-            }
-            return success(res, "Mobile verified!", {});
-        }
-        catch (error) {
-            return failed(res, {}, error.message, 400);
-        }
-
-    }
 
     static generateBookingId(length = 10) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
