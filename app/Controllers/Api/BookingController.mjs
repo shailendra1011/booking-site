@@ -9,7 +9,7 @@ import { sendOtp } from "../../Helper/sendOtp.mjs"
 import { EmailOtp } from "../../Models/EmailOtp.mjs";
 import { sendBill } from "../../Helper/sendBill.mjs";
 import dayjs from "dayjs";
-import { MobileOtp } from "../../Models/MobileOtp.mjs";
+import { sendMobileOtp } from "../../Helper/sendMobileOtp.mjs";
 
 export class BookingController {
 
@@ -248,6 +248,7 @@ export class BookingController {
             return failed(res, {}, error.message, 400);
         }
     }
+
     static async sendOtp(req, res) {
         try {
             const valid = new Validator(req.body, {
@@ -258,11 +259,12 @@ export class BookingController {
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
             if (req.body.mobile) {
-                var mobile_otp = 1234;
+                var mobile_otp = Math.floor(1000 + Math.random() * 9000);
+                 sendMobileOtp(req.body.mobile, mobile_otp);
             }
             if (req.body.email) {
                 var email_otp = Math.floor(1000 + Math.random() * 9000);
-                sendOtp(req.body.email, email_otp);
+                // sendOtp(req.body.email, email_otp);
             }
             await EmailOtp.create({ email: req.body.email, mobile: req.body.mobile, email_otp: email_otp, mobile_otp: mobile_otp });
             return success(res, "Otp sent!", {});
@@ -272,44 +274,45 @@ export class BookingController {
         }
 
     }
+
     static async verifyOtp(req, res) {
-        try {
-            const valid = new Validator(req.body, {
-                email: 'required|email',
-                mobile: 'required',
-                email_otp: 'required',
-                mobile_otp: 'required'
-            });
+    try {
+        const valid = new Validator(req.body, {
+            email: 'required|email',
+            mobile: 'required',
+            email_otp: 'required',
+            mobile_otp: 'required'
+        });
 
-            const matched = await valid.check();
-            if (!matched) return validationFailedRes(res, valid);
-            const emailOtp = await EmailOtp.findOne({ email: req.body.email, mobile: req.body.mobile, email_otp: req.body.email_otp, mobile_otp: req.body.mobile_otp }).sort({ createdAt: -1 }).exec();
-            if (!emailOtp) {
-                return customFailedMessage(res, "Invalid OTP", 400);
-            }
-            const currentTime = new Date();
-            const otpCreationTime = new Date(emailOtp.createdAt);
-            const timeDifference = (currentTime - otpCreationTime) / (1000 * 60); // difference in minutes
-            if (timeDifference > 10) { // assuming OTP is valid for 10 minutes
-                return customFailedMessage(res, "OTP has expired", 400);
-            }
-            return success(res, "OTP verified!", {});
+        const matched = await valid.check();
+        if (!matched) return validationFailedRes(res, valid);
+        const emailOtp = await EmailOtp.findOne({ email: req.body.email, mobile: req.body.mobile, email_otp: req.body.email_otp, mobile_otp: req.body.mobile_otp }).sort({ createdAt: -1 }).exec();
+        if (!emailOtp) {
+            return customFailedMessage(res, "Invalid OTP", 400);
         }
-        catch (error) {
-            return failed(res, {}, error.message, 400);
+        const currentTime = new Date();
+        const otpCreationTime = new Date(emailOtp.createdAt);
+        const timeDifference = (currentTime - otpCreationTime) / (1000 * 60); // difference in minutes
+        if (timeDifference > 10) { // assuming OTP is valid for 10 minutes
+            return customFailedMessage(res, "OTP has expired", 400);
         }
-
+        return success(res, "OTP verified!", {});
     }
+    catch (error) {
+        return failed(res, {}, error.message, 400);
+    }
+
+}
 
 
     static generateBookingId(length = 10) {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-        let bookingId = '';
-        for (let i = 0; i < length; i++) {
-            bookingId += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        return bookingId;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let bookingId = '';
+    for (let i = 0; i < length; i++) {
+        bookingId += chars.charAt(Math.floor(Math.random() * chars.length));
     }
+    return bookingId;
+}
 
 
 }
