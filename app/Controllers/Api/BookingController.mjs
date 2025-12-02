@@ -261,17 +261,15 @@ export class BookingController {
 
             var mobile_otp = null;
             var email_otp = null;
-
-            if (req.body.mobile) {
-                mobile_otp = Math.floor(1000 + Math.random() * 9000);
-                await sendMobileOtp(req.body.mobile, mobile_otp);
-            }
-
             if (req.body.email) {
                 email_otp = Math.floor(1000 + Math.random() * 9000);
                 sendOtp(req.body.email, email_otp);
             }
-
+            if (req.body.mobile) {
+                mobile_otp = 1234
+                // mobile_otp = Math.floor(1000 + Math.random() * 9000);
+                // await sendMobileOtp(req.body.mobile, mobile_otp);
+            }
             await EmailOtp.create({ email: req.body.email, mobile: req.body.mobile, email_otp: email_otp, mobile_otp: mobile_otp });
             return success(res, "Otp sent!", {});
         }

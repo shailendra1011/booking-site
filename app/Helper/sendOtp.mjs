@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 
 export function sendOtp(email, otp) {
+    
     // __define-ocg__ Nodemailer transporter setup
     const varOcg = nodemailer.createTransport({
         host: "smtp.gmail.com",
