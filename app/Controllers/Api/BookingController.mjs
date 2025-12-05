@@ -47,14 +47,18 @@ export class BookingController {
             const base_url = process.env.BASE_URL
             const today = new Date()
             if (req.query.booking_type == 'Outstation') {
+                const filter = {
+                    service_type: req.query.booking_type,
+                    from_city: req.query.origin_city,
+                    from_date: { $lte: today },
+                    to_date: { $gte: today },
+                    status: true,
+                };
+                if (req.query.transfer_city) {
+                    filter.transfer_city = req.query.transfer_city;
+                }
                 packages = await Package.find(
-                    {
-                        service_type: req.query.booking_type,
-                        from_city: req.query.origin_city,
-                        from_date: { $lte: today }, // from_date <= today
-                        to_date: { $gte: today },   // to_date >= today
-                        status: true
-                    },
+                    filter,
                     {
                         _id: 1, vehicle_name: 1, service_type: 1, package_name: 1, from_city: 1, to_city: 1, inclusions: 1, exclusions: 1, price: 1, km_in_hours: 1, total_km: 1, gst: 1, from_date: 1, to_date: 1, additional_notes: 1
                     }
@@ -74,13 +78,19 @@ export class BookingController {
                 return success(res, "Package list", packages, 200);
 
             } else {
+                const filter = {
+                    service_type: req.query.booking_type,
+                    from_city: req.query.origin_city,
+                    from_date: { $lte: today }, // from_date <= today
+                    to_date: { $gte: today }    // to_date >= today
+                };
+
+                // apply transfer_city only if it is passed in query
+                if (req.query.transfer_city) {
+                    filter.transfer_city = req.query.transfer_city;
+                }
                 packages = await Package.find(
-                    {
-                        service_type: req.query.booking_type,
-                        from_city: req.query.origin_city,
-                        from_date: { $lte: today }, // from_date <= today
-                        to_date: { $gte: today }    // to_date >= today
-                    },
+                    filter,
                     {
                         _id: 1, vehicle_name: 1, service_type: 1, package_name: 1, from_city: 1, to_city: 1, inclusions: 1, exclusions: 1, price: 1, km_in_hours: 1, total_km: 1, gst: 1, from_date: 1, to_date: 1, additional_notes: 1
                     }
@@ -181,6 +191,7 @@ export class BookingController {
                 {
                     service_type: req.query.booking_type,
                     from_city: req.query.origin_city,
+                    // to_city: req.query.to_city,
                     km_in_hours: req.query.km_in_hours,
                     from_date: { $lte: today }, // from_date <= today
                     to_date: { $gte: today },    // to_date >= today
@@ -263,12 +274,12 @@ export class BookingController {
             var email_otp = null;
             if (req.body.email) {
                 email_otp = Math.floor(1000 + Math.random() * 9000);
-                sendOtp(req.body.email, email_otp);
+                // sendOtp(req.body.email, email_otp);
             }
             if (req.body.mobile) {
                 mobile_otp = 1234
                 // mobile_otp = Math.floor(1000 + Math.random() * 9000);
-                // await sendMobileOtp(req.body.mobile, mobile_otp);
+                await sendMobileOtp(req.body.mobile, mobile_otp);
             }
             await EmailOtp.create({ email: req.body.email, mobile: req.body.mobile, email_otp: email_otp, mobile_otp: mobile_otp });
             return success(res, "Otp sent!", {});
