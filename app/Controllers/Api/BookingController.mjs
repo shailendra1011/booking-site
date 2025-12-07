@@ -27,21 +27,22 @@ export class BookingController {
                 booking_type: 'required',
                 origin_city: 'required',
                 // transfer_city: 'required',
-                pickup_location_latitude: 'required',
-                pickup_location_longitude: 'required',
-                drop_location_latitude: 'required',
-                drop_location_longitude: 'required',
+                // pickup_location_latitude: 'required',
+                // pickup_location_longitude: 'required',
+                // drop_location_latitude: 'required',
+                // drop_location_longitude: 'required',
 
             });
 
             const matched = await valid.check();
             if (!matched) return validationFailedRes(res, valid);
 
-            const point1 = { latitude: req.query.pickup_location_latitude, longitude: req.query.pickup_location_longitude }; // New Delhi
-            const point2 = { latitude: req.query.drop_location_latitude, longitude: req.query.drop_location_longitude }; // Mumbai
+            // const point1 = { latitude: req.query.pickup_location_latitude, longitude: req.query.pickup_location_longitude }; // New Delhi
+            // const point2 = { latitude: req.query.drop_location_latitude, longitude: req.query.drop_location_longitude }; // Mumbai
 
             // getDistance returns meters
-            const distance = Math.round((getDistance(point1, point2)) / 1000);
+            // const distance = Math.round((getDistance(point1, point2)) / 1000);
+            const distance = 0;
             let vehicles = [];
             let packages = [];
             const base_url = process.env.BASE_URL
