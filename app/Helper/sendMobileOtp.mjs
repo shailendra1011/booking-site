@@ -19,7 +19,7 @@ export async function sendMobileOtp(mobile, otp) {
         app_country: "1",
         dlt_entity_id: "1001413500000012232",
         dlt_template_id: "1007624361247948764",
-        template_values: [otp],       // dynamic OTP
+        template_values: [`${otp} is your OTP to verify your mobile number. Please do not share it with anyone, - International Travel House` ],       // dynamic OTP
         senderid: "TRVLHS",
         dcs: "0",
         udhi_inc: "0",

@@ -126,6 +126,11 @@ export class VehicleController {
     }
     static async addEditCity(req, res) {
         try {
+            // if (req.body.name) {
+            //     req.body.name =
+            //         req.body.name.charAt(0).toUpperCase() +
+            //         req.body.name.slice(1).toLowerCase();
+            // }
             const valid = new Validator(req.body, {
                 name: 'required'
             });
