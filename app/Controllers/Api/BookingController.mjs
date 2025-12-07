@@ -55,7 +55,7 @@ export class BookingController {
                     status: true,
                 };
                 if (req.query.transfer_city) {
-                    filter.transfer_city = req.query.transfer_city;
+                    filter["to_city.city"] = req.query.transfer_city;
                 }
                 packages = await Package.find(
                     filter,
@@ -87,7 +87,7 @@ export class BookingController {
 
                 // apply transfer_city only if it is passed in query
                 if (req.query.transfer_city) {
-                    filter.transfer_city = req.query.transfer_city;
+                    filter["to_city.city"] = req.query.transfer_city;
                 }
                 packages = await Package.find(
                     filter,
@@ -279,9 +279,9 @@ export class BookingController {
             if (req.body.mobile) {
                 mobile_otp = 1234
                 // mobile_otp = Math.floor(1000 + Math.random() * 9000);
-               const res=  await sendMobileOtp(req.body.mobile, mobile_otp);
-               console.log(res);
-               
+                const res = await sendMobileOtp(req.body.mobile, mobile_otp);
+                console.log(res);
+
             }
             await EmailOtp.create({ email: req.body.email, mobile: req.body.mobile, email_otp: email_otp, mobile_otp: mobile_otp });
             return success(res, "Otp sent!", {});
