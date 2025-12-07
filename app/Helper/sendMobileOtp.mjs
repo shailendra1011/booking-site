@@ -1,35 +1,44 @@
 import axios from "axios";
 
-export const sendMobileOtp = async (mobile, otp) => {
-    try {
-        const username = "TRVLHS";
-        const password = "ITH#app1";
-        const auth = Buffer.from(`${username}:${password}`).toString("base64");
+export async function sendMobileOtp(mobile, otp) {
+  const url = "https://japi.instaalerts.zone/httpapi/JsonReceiver";
 
-        const payload = {
-            messages: [
-                {
-                    channel: "sms",
-                    sender: "TRVLHS",
-                    recipient: "91" + mobile,
-                    content: `${otp} is your OTP so verify your mobile number. Please do not share It with anyone,- International Travel House`,
-                    template_id: "1007624361247948764"
-                }
-            ]
-        };
+  // Base64("TRVLHS:ITH#app1")
+  const basicAuth = "Basic VFJWTEhTOklUSCNhcHAx";
 
-        console.log("Sending payload:", payload);
+  const payload = {
+    ver: "1.0",
+    key: "ht0Mf3HcjMCgCKgiuHj0bg==",
+    encrpt: "0",
+    sch_at: "",
+    messages: [
+      {
+        dest: [mobile],               // dynamic mobile number
+        type: "SI",
+        country_cd: "91",
+        app_country: "1",
+        dlt_entity_id: "1001413500000012232",
+        dlt_template_id: "1007624361247948764",
+        template_values: [otp],       // dynamic OTP
+        senderid: "TRVLHS",
+        dcs: "0",
+        udhi_inc: "0",
+        port: "0",
+        vp: "15"
+      }
+    ]
+  };
 
-        const response = await axios.post("https://api.karix.com/messages", payload, {
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Basic ${auth}`
-            }
-        });
+  try {
+    const response = await axios.post(url, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: basicAuth
+      }
+    });
 
-        console.log("Karix Response:", response.data);
-        console.log("Mobile OTP sent successfully.");
-    } catch (error) {
-        console.error("Karix API Error:", error.response?.data || error.message);
-    }
-};
+    return response.data; // return result to caller
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+}
