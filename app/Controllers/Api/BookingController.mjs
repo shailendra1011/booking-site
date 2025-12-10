@@ -47,7 +47,7 @@ export class BookingController {
             let packages = [];
             const base_url = process.env.BASE_URL
             const today = new Date()
-            if (req.query.booking_type == 'Outstation') {
+            if (req.query.booking_type == 'Intercity Rides') {
                 const filter = {
                     service_type: req.query.booking_type,
                     from_city: req.query.origin_city,

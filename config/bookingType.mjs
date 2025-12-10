@@ -1,8 +1,8 @@
 export const bookingType = [
     "Airport/Railway Pick Up",
     "Airport/Railway Drop",
-    "Within City",
+    "Hourly/ Daylong Rentals",
     // "One Way Intercity Transfer",
     // "One Way",
-    "Outstation"
+    "Intercity Rides"
 ];
