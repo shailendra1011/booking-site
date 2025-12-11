@@ -3,28 +3,17 @@ import axios from "axios";
 export async function sendMobileOtp(mobile, otp) {
   const url = "https://japi.instaalerts.zone/httpapi/JsonReceiver";
 
-  // Base64("TRVLHS:ITH#app1")
-  const basicAuth = "Basic VFJWTEhTOklUSCNhcHAx";
-
   const payload = {
     ver: "1.0",
     key: "ht0Mf3HcjMCgCKgiuHj0bg==",
-    encrpt: "0",
-    sch_at: "",
     messages: [
       {
-        dest: [mobile],               // dynamic mobile number
-        type: "SI",
-        country_cd: "91",
-        app_country: "1",
+        dest: [mobile], // mobile number with country code
+        text: `${otp} is your OTP to verify your mobile number. Please do not share it with anyone. - International Travel House`,
+        send: "TRVLHS",
+        type: "PM",
         dlt_entity_id: "1001413500000012232",
-        dlt_template_id: "1007624361247948764",
-        template_values: [`${otp} is your OTP to verify your mobile number. Please do not share it with anyone, - International Travel House` ],       // dynamic OTP
-        senderid: "TRVLHS",
-        dcs: "0",
-        udhi_inc: "0",
-        port: "0",
-        vp: "15"
+        dlt_template_id: "1007624361247948764"
       }
     ]
   };
@@ -32,13 +21,12 @@ export async function sendMobileOtp(mobile, otp) {
   try {
     const response = await axios.post(url, payload, {
       headers: {
-        "Content-Type": "application/json",
-        Authorization: basicAuth
+        "Content-Type": "application/json"
       }
     });
 
-    return response.data; // return result to caller
+    console.log("SMS API Response:", response.data);
   } catch (error) {
-    throw error.response?.data || error.message;
+    console.error("Error sending SMS:", error.response?.data || error.message);
   }
 }
